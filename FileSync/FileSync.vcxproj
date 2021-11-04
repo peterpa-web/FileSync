@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Template|Win32">
+      <Configuration>Template</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9ED54E44-8E5F-4161-9EDF-668C52E53E4E}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.21006.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\CDVD;..\..\ZipArchive\ZipArchive;..\..\StackWalker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalLibraryDirectories>..\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <AdditionalIncludeDirectories>..\CDVD;..\..\ZipArchive\ZipArchive;..\..\StackWalker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>..\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ArcRoot.cpp" />
+    <ClCompile Include="AssocDlg.cpp" />
+    <ClCompile Include="BitmapTransparent.cpp" />
+    <ClCompile Include="ChangeNotification.cpp" />
+    <ClCompile Include="ColorsDlg.cpp" />
+    <ClCompile Include="ComboBoxDir.cpp" />
+    <ClCompile Include="ComboSearch.cpp" />
+    <ClCompile Include="ConvertUTF.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="DialogReplace.cpp" />
+    <ClCompile Include="DirEntry.cpp" />
+    <ClCompile Include="DlgOverwriteNewer.cpp" />
+    <ClCompile Include="DocDir.cpp" />
+    <ClCompile Include="DocDirArchive.cpp" />
+    <ClCompile Include="DocDirIsoRoot.cpp" />
+    <ClCompile Include="DocDirIsoSub.cpp" />
+    <ClCompile Include="DocDirNative.cpp" />
+    <ClCompile Include="DocDirZipRoot.cpp" />
+    <ClCompile Include="DocDirZipSub.cpp" />
+    <ClCompile Include="DocFile.cpp" />
+    <ClCompile Include="DocFileSync.cpp" />
+    <ClCompile Include="DocHex.cpp" />
+    <ClCompile Include="DocManFileSync.cpp" />
+    <ClCompile Include="DocTemplFileSync.cpp" />
+    <ClCompile Include="DocText.cpp" />
+    <ClCompile Include="DocXml.cpp" />
+    <ClCompile Include="DragDropImpl.cpp" />
+    <ClCompile Include="DualListBox.cpp" />
+    <ClCompile Include="DualTreeCtrl.cpp" />
+    <ClCompile Include="DualTreeDir.cpp" />
+    <ClCompile Include="DualTreeDirData.cpp" />
+    <ClCompile Include="DualTreeItem.cpp" />
+    <ClCompile Include="EditLine.cpp" />
+    <ClCompile Include="FileDialogExt.cpp" />
+    <ClCompile Include="FileSync.cpp" />
+    <ClCompile Include="ListBoxMode.cpp" />
+    <ClCompile Include="ListDirEntries.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="PIDL.cpp" />
+    <ClCompile Include="Ping.cpp" />
+    <ClCompile Include="PrefDlg.cpp" />
+    <ClCompile Include="ProgBar.cpp" />
+    <ClCompile Include="REBProgressDialog.cpp" />
+    <ClCompile Include="Storage.cpp" />
+    <ClCompile Include="StringDiff.cpp" />
+    <ClCompile Include="TaskBase.cpp" />
+    <ClCompile Include="TaskDirCompFiles.cpp" />
+    <ClCompile Include="TaskDirDep.cpp" />
+    <ClCompile Include="TaskDirExp.cpp" />
+    <ClCompile Include="TaskDirScan.cpp" />
+    <ClCompile Include="TaskIdle.cpp" />
+    <ClCompile Include="TaskIdleDel.cpp" />
+    <ClCompile Include="TaskIdleExp.cpp" />
+    <ClCompile Include="TaskIdleInv.cpp" />
+    <ClCompile Include="TaskIdleUpd.cpp" />
+    <ClCompile Include="ThreadBack.cpp" />
+    <ClCompile Include="TitleTip.cpp" />
+    <ClCompile Include="TitleTipListBox.cpp" />
+    <ClCompile Include="ToolBarFixed.cpp" />
+    <ClCompile Include="ToolBarSearch.cpp" />
+    <ClCompile Include="ToolButton.cpp" />
+    <ClCompile Include="UndoBuffer.cpp" />
+    <ClCompile Include="UndoDelete.cpp" />
+    <ClCompile Include="UndoDir.cpp" />
+    <ClCompile Include="UndoInsertAfter.cpp" />
+    <ClCompile Include="UndoInsertBefore.cpp" />
+    <ClCompile Include="UndoInsertText.cpp" />
+    <ClCompile Include="UndoReplace.cpp" />
+    <ClCompile Include="UndoReplaceText.cpp" />
+    <ClCompile Include="UndoTask.cpp" />
+    <ClCompile Include="UndoTaskFileSync.cpp" />
+    <ClCompile Include="UndoViewText.cpp" />
+    <ClCompile Include="ViewDir.cpp" />
+    <ClCompile Include="ViewDirItem.cpp" />
+    <ClCompile Include="ViewFileSync.cpp" />
+    <ClCompile Include="ViewHex.cpp" />
+    <ClCompile Include="ViewList.cpp" />
+    <ClCompile Include="ViewText.cpp" />
+    <ClCompile Include="ViewXml.cpp" />
+    <ClCompile Include="crc_i386.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="crctab.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ArcRoot.h" />
+    <ClInclude Include="AssocDlg.h" />
+    <ClInclude Include="BitmapTransparent.h" />
+    <ClInclude Include="ChangeNotification.h" />
+    <ClInclude Include="ColorsDlg.h" />
+    <ClInclude Include="ComboBoxDir.h" />
+    <ClInclude Include="ComboSearch.h" />
+    <ClInclude Include="ConvertUTF.h" />
+    <ClInclude Include="DialogReplace.h" />
+    <ClInclude Include="DirEntry.h" />
+    <ClInclude Include="DlgOverwriteNewer.h" />
+    <ClInclude Include="DocDir.h" />
+    <ClInclude Include="DocDirArchive.h" />
+    <ClInclude Include="DocDirIsoRoot.h" />
+    <ClInclude Include="DocDirIsoSub.h" />
+    <ClInclude Include="DocDirNative.h" />
+    <ClInclude Include="DocDirZipRoot.h" />
+    <ClInclude Include="DocDirZipSub.h" />
+    <ClInclude Include="DocFile.h" />
+    <ClInclude Include="DocFileSync.h" />
+    <ClInclude Include="DocHex.h" />
+    <ClInclude Include="DocManFileSync.h" />
+    <ClInclude Include="DocTemplFileSync.h" />
+    <ClInclude Include="DocText.h" />
+    <ClInclude Include="DocXml.h" />
+    <ClInclude Include="DragDropImpl.h" />
+    <ClInclude Include="DualListBox.h" />
+    <ClInclude Include="DualTree.h" />
+    <ClInclude Include="DualTreeCtrl.h" />
+    <ClInclude Include="DualTreeData.h" />
+    <ClInclude Include="DualTreeDir.h" />
+    <ClInclude Include="DualTreeDirData.h" />
+    <ClInclude Include="DualTreeItem.h" />
+    <ClInclude Include="EditLine.h" />
+    <ClInclude Include="FileDialogExt.h" />
+    <ClInclude Include="FileSync.h" />
+    <ClInclude Include="ListBoxMode.h" />
+    <ClInclude Include="ListDirEntries.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="PIDL.h" />
+    <ClInclude Include="Ping.h" />
+    <ClInclude Include="PrefDlg.h" />
+    <ClInclude Include="ProgBar.h" />
+    <ClInclude Include="REBProgressDialog.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Storage.h" />
+    <ClInclude Include="StringDiff.h" />
+    <ClInclude Include="TaskBase.h" />
+    <ClInclude Include="TaskDirCompFiles.h" />
+    <ClInclude Include="TaskDirDep.h" />
+    <ClInclude Include="TaskDirExp.h" />
+    <ClInclude Include="TaskDirScan.h" />
+    <ClInclude Include="TaskIdle.h" />
+    <ClInclude Include="TaskIdleDel.h" />
+    <ClInclude Include="TaskIdleExp.h" />
+    <ClInclude Include="TaskIdleInv.h" />
+    <ClInclude Include="TaskIdleUpd.h" />
+    <ClInclude Include="ThreadBack.h" />
+    <ClInclude Include="ThreadTrace.h" />
+    <ClInclude Include="TitleTip.h" />
+    <ClInclude Include="TitleTipListBox.h" />
+    <ClInclude Include="ToolBarFixed.h" />
+    <ClInclude Include="ToolBarSearch.h" />
+    <ClInclude Include="ToolButton.h" />
+    <ClInclude Include="UndoBuffer.h" />
+    <ClInclude Include="UndoDelete.h" />
+    <ClInclude Include="UndoDir.h" />
+    <ClInclude Include="UndoInsertAfter.h" />
+    <ClInclude Include="UndoInsertBefore.h" />
+    <ClInclude Include="UndoInsertText.h" />
+    <ClInclude Include="UndoReplace.h" />
+    <ClInclude Include="UndoReplaceText.h" />
+    <ClInclude Include="UndoTask.h" />
+    <ClInclude Include="UndoTaskFileSync.h" />
+    <ClInclude Include="UndoViewText.h" />
+    <ClInclude Include="ViewDir.h" />
+    <ClInclude Include="ViewDirItem.h" />
+    <ClInclude Include="ViewFileSync.h" />
+    <ClInclude Include="ViewHex.h" />
+    <ClInclude Include="ViewList.h" />
+    <ClInclude Include="ViewText.h" />
+    <ClInclude Include="ViewXml.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="html\filesync.css" />
+    <None Include="html\index.html" />
+    <None Include="html\viewdir.html" />
+    <None Include="html\viewhex.html" />
+    <None Include="html\viewtext.html" />
+    <None Include="res\bitmapOpenDir.bmp" />
+    <None Include="res\check.bmp" />
+    <None Include="res\CLSDFOLD.ICO" />
+    <None Include="res\dircomp.bmp" />
+    <None Include="res\filecomp.bmp" />
+    <None Include="res\FileSync.ico" />
+    <None Include="res\FileSync.manifest" />
+    <None Include="res\FileSync.rc2" />
+    <None Include="res\mode-G.bmp" />
+    <None Include="res\mode-GY.bmp" />
+    <None Include="res\mode-R.bmp" />
+    <None Include="res\mode-RY.bmp" />
+    <None Include="res\mode-Y.bmp" />
+    <None Include="res\mode_dis.bmp" />
+    <None Include="res\mode_G.bmp" />
+    <None Include="res\mode_R.bmp" />
+    <None Include="res\mode_Y.bmp" />
+    <None Include="res\NOTE06.ICO" />
+    <None Include="res\NOTE07.ICO" />
+    <None Include="res\open.bmp" />
+    <None Include="res\opendir.bmp" />
+    <None Include="res\opendir_men.bmp" />
+    <None Include="res\openmenu.bmp" />
+    <None Include="res\open_foc.bmp" />
+    <None Include="res\Toolbar.bmp" />
+    <None Include="res\toolbarLR.bmp" />
+    <None Include="res\bitmapOpen.bmp" />
+    <None Include="res\bitmapSave.bmp" />
+    <None Include="res\bitmapSaveDis.bmp" />
+    <None Include="res\dircomp.ico" />
+    <None Include="res\iconxml.ico" />
+    <None Include="res\tool_search.bmp" />
+    <None Include="res\treeimages.bmp" />
+    <None Include="res\viewdir-r.bmp" />
+    <None Include="res\viewdir.bmp" />
+    <None Include="res\viewhex.ICO" />
+    <None Include="res\viewhex.bmp" />
+    <None Include="res\viewtext-r.bmp" />
+    <None Include="res\viewtext.bmp" />
+    <None Include="res\viewzip.bmp" />
+    <None Include="ClassStruct.txt" />
+    <None Include="..\MakeSetup\FileSyncSetup.nsi" />
+    <None Include="License.txt" />
+    <None Include="ReadMe.txt" />
+    <None Include="gpl.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FileSync.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\StackWalker\StackWalker_VC10\Debug\StackWalker.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\StackWalker\StackWalker_VC10\StackWalker_VC10.vcxproj">
+      <Project>{ab7e19c5-95ee-4777-97ad-0601fbda896b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ZipArchive\ZipArchive\ZipArchive.vcxproj">
+      <Project>{a51cf340-b0ea-4c9b-a2fa-4d7487692ef5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\CDVD\CDVD.vcxproj">
+      <Project>{48a27f3a-7c6d-402d-80b9-b54e406f91d6}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="FileSync.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

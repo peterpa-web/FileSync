@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+
+<head>
+<title>FileSync DirView</title>
+<link rel="stylesheet" type="text/css" href="filesync.css">
+</head>
+
+<body link=blue vlink=purple>
+<p><a href="index.html">Contents</a></p>
+
+<p class="Title">DirView <img src="dirviewicon.png" /></p>
+<p>This view compares and synchronizes the contents of native directories, ZIP compressed files and ISO archives (R/O):</p>
+<p><img src="viewdir.png" /></p>
+<p>MKS project files *.pj are hidden.</p>
+<p>Files are compared using CRC32 if sizes are equal but timestamps are different. Text comparison excludes code comments marked by /* ... */.</p>
+
+<p class="Toc1"><a href="#MainToolbar">1 Main Toolbar</a></p>
+<p class="Toc2"><a href="#DiffNav">1.1 Differences Navigation</a></p>
+<p class="Toc2"><a href="#Expand">1.2 Tree Expanding</a></p>
+<p class="Toc2"><a href="#HistNav">1.3 History Navigation</a></p>
+<p class="Toc2"><a href="#Clipboard">1.4 Clipboard</a></p>
+<p class="Toc2"><a href="#Copy">1.5 Copy / Replace Files</a></p>
+<p class="Toc2"><a href="#Sync">1.6 Synchronize Files</a></p>
+<p class="Toc2"><a href="#Help">1.7 Help</a></p>
+<p class="Toc2"><a href="#Search">1.8 String Searching</a></p>
+<p class="Toc1"><a href="#SideToolbar">2 Side Toolbar</a></p>
+<p class="Toc1"><a href="#Extra">3 Addtional Functions</a></p>
+<p class="Toc2"><a href="#Color">3.1 Color Schema</a></p>
+<p class="Toc3"><a href="#Datetime">3.1.1 DateTime, RO, Size</a></p>
+<p class="Toc2"><a href="#Sel">3.2 File Selection</a></p>
+<p class="Toc2"><a href="#Context">3.3 Context Menus</a></p>
+<p class="Toc3"><a href="#ContextFile">3.3.1 File Context Menu</a></p>
+<p class="Toc3"><a href="#ContextDir">3.3.2 Dir Context Menu</a></p>
+<p class="Toc2"><a href="#DragDrop">3.4 Drag/Drop</a></p>
+<p class="Toc2"><a href="#ExtNotify">3.5 External Change Notification</a></p>
+<p class="Toc2"><a href="#Sort">3.6 Sort</a></p>
+<p class="Toc2"><a href="#Sort">3.7 Show MKS Project Files</a></p>
+
+
+
+
+<h1><a name="MainToolbar">1 Main Toolbar</a></h1>
+<h2><a name="DiffNav">1.1 Differences Navigation</a></h2>
+<p>Toolbar buttons <img src="diffnav.png" /> or menu <b>View</b>:</p>
+<table border="1">
+<tr><td>Prev Diff</td><td>Show previous difference above</td></tr>
+<tr><td>Next Diff</td><td>Show next difference below</td></tr>
+</table>
+
+<h2><a name="Expand">1.2 Tree Expanding</a></h2>
+<p>See <a href="#ContextDir">Dir Context Menu</a> <b>Expand all</b></p>
+
+<h2><a name="HistNav">1.3 History Navigation</a></h2>
+<p>Toolbar buttons <img src="histnav.png" /> or menu <b>View</b>:</p>
+<table border="1">
+<tr><td>Prev</td><td>Return to previous DirView</td></tr>
+<tr><td>Next</td><td>Show next DirView</td></tr>
+</table>
+
+<h2><a name="Clipboard">1.4 Clipboard</a></h2>
+<p>To copy the relative path names of the selected files and subdirectories there are several ways:</p>
+<ul>
+    <li>Menu <b>Edit / Copy</b></li>
+    <li>Shortcut Key <b>Ctrl / C</b></li>
+    <li>Toolbar button</li> 
+</ul>
+
+<h2><a name="Copy">1.5 Copy / Replace Files</a></h2>
+<p>The selected files and / or subdirectories are copied to the corresponding directory tree, 
+exiting files are replaced. If ZIP files are targeted the may need to be saved later. 
+Copying large amounts of data may be cancelled.</p>
+
+<h2><a name="Sync">1.6 Synchronize Files</a></h2>
+<p>To compare and synchronize files select two files with same or different name. To show them with the default view:</p>
+<ul>
+    <li>Menu <b>View / File synchr.</b></li>
+    <li>Double click</li>
+    <li>Toolbar button <img src="filesync.gif" /></li> 
+</ul>
+<p>To choose a special view you may use the <a href="#ContextDir">Dir Context Menu</a>.</p>
+
+<h2><a name="Help">1.7 Help</a></h2>
+<p>Show help in a browser window</p>
+<ul>
+    <li>Menu <b>Help</b> showes help contents.</li> 
+    <li>Toolbar button <img src="help.png" /> or <b>F1</b> showes help for the current view.</li> 
+</ul>
+
+<h2><a name="Search">1.8 String Searching</a></h2>
+<p>To search for a string the following toolbar is provided:</p>
+<p><img src="search.png" border="1"/></p>
+<ul>
+    <li>You may enter a string to be searched and press <i>Enter</i>.</li>
+    <li>A previously entered string may be recalled from the list box by pressing the list button.</li>
+    <li>To continue searching you may press F3 or use the buttons left or right of the entered string.</li>
+    <li>A beep will sound if no item is found for the relevant direction.</li>
+    <li>The special string "rw" locates writeable files.</li>
+</ul>
+
+<h1><a name="SideToolbar">2 Side Toolbar</a></h1>
+<p>To search for a string the following toolbar is provided: <img src="sidetoolbardir.png" /></p>
+<p>The same commands are available from the menu <b>File</b>:</p>
+<ul>
+    <li><a href="index.html#OpenDir">Open Directory</a></li>
+    <li><a href="index.html#OpenFile">Open File</a></li>
+    <li>Save File (for saving changed ZIP files)</li> 
+</ul>
+
+<h1><a name="Extra">3 Addtional Functions</a></h1>
+<h2><a name="Color">3.1 Color Schema</a></h2>
+<p>Files or Directories are equal:</p>
+<p><img src="colordir1.png" border="1"/></p>
+<p>Dir incomplete scan:</p>
+<p><img src="colordir2.png" border="1"/></p>
+<p>Extra Files or Dir containing extra (L/R):</p>
+<p><img src="colordir3.png" border="1"/></p>
+<p>Differences:</p>
+<p><img src="colordir4.png" border="1"/></p>
+<p>Newer date and different sizes are highlighted.</p>
+
+<h3><a name="Datetime">3.1.1 DateTime, RO, Size</a></h3>
+<table border="1">
+<tr><td>Date/Time format</td><td><tt>DD.MM.YY hh:mm:ss</tt></td></tr>
+<tr><td>File mode R/O</td><td><tt>xx.xx.xx<b>R</b>xx:xx:xx</tt></td></tr>
+</table>
+<p>File / Directory size is in bytes, or:</p>
+<table border="1">
+<tr><td><tt>???</tt></td><td>pending: size unknown because of incomplete expansion</td></tr>
+<tr><td><tt>###</tt></td><td>dirty: please wait for unfinished background operation</td></tr>
+</table>
+
+<h2><a name="Sel">3.2 File Selection</a></h2>
+<p>You may select single or multiple files or subdirectories, but sometimes only a single selection is meaningful.</p>
+<ul>
+    <li>Single entry: Simply click it with the left mouse button.</li>
+    <li>Add or remove entry: Press <i>Ctrl</i> during mouse click.</li>
+</ul>
+<p>Selecting a higher level subdirectory will unselect any entry below.</p>
+
+<h2><a name="Context">3.3 Context Menus</a></h2>
+<p>The context menu is different for files and subdirectories.</p>
+<p>Basically it applies to all selected lines or at least the current line.</p>
+<p>By click the <i>right mouse button</i> you get the context menu for a file or 
+subdirectory. Some menu items are available depending on the view column:</p>
+<table border="1">
+<tr><td>Name</td><td>Menu applies to files or directories for both sides if applicable.</td></tr>
+<tr><td>Left date/size</td><td>Left side only</td></tr>
+<tr><td>Right date/size</td><td>Right side only</td></tr>
+</table>
+
+<h3><a name="ContextFile">3.3.1 File context menu</a></h3>
+<table border="1">
+<tr>
+  <td>Hex</td>        <td>View selection using Hex view.</td>
+</tr>
+<tr>
+  <td>Text</td>       <td>View selection using Text view.</td>
+</tr>
+<tr>
+  <td>XML</td>        <td>View selection using XML view.</td>
+</tr>
+<tr>
+  <td>Link Pair</td>  <td>combines two related files.</td>
+</tr>
+<tr>
+  <td>R / W</td>      <td>Toggle permission for selected files to R/W resp. R/O.</td>
+</tr>
+<tr>
+  <td>Open</td>       <td>The system defined standard application will be used to open the file.</td>
+</tr>
+<tr>
+  <td>Set Equal</td>  <td>removes difference highlighting for a pair of files.</td>
+</tr>
+</table>
+
+<h3><a name="ContextDir">3.3.2 Dir context menu</a></h3>
+<table border="1">
+  <tr>
+    <td>Expand all</td>   <td>All subfolders are expanded</td>
+</tr>
+<tr>
+  <td>Expand partial</td> <td>All subfolders except for a single side are expanded (recommended for compact comparison)</td>
+</tr>
+<tr>
+  <td>Collapse</td>       <td>Reduce expansion</td>
+</tr>
+<tr>
+  <td>Free</td>           <td>Collapse and unload subfolders</td>
+</tr>
+<tr>
+  <td>Link Pair</td>      <td>combines two related dirs.</td>
+</tr>
+<tr>
+  <td>Select diffs</td>   <td>Non equal entries are selected i.e. for copying</td>
+</tr>
+<tr>
+  <td>R / W</td>          <td>Toggle permission for selected files to R/W resp. R/O.</td>
+</tr>
+<tr>
+  <td>Explore</td>        <td>Open an Explorer window for the pointed directory.</td>
+</tr>
+</table>
+
+  <h2><a name="DragDrop">3.4 Drag/Drop</a></h2>
+<p>To open a file with a different application you may drag the selected file 
+on that application. Because of different formats and capabilities this sometimes not works.</p>
+
+<h2><a name="ExtNotify">3.5 External Change Notification</a></h2>
+<p>External changes of the shown files and directories are recognized in the background. 
+The DirView will be updated automatically.</p>
+
+<h2><a name="Sort">3.6 Sort</a></h2>
+<p>Menu View/Sort provides selection from some sorting rules for the sequence of folders and files shown.</p>
+
+<h2><a name="Sort">3.7 Show MKS Project Files</a></h2>
+<p>Menu View/Project Files: Toggle showing or hiding MKS Project Files ".pj"</p>
+
+</body>
+</html>

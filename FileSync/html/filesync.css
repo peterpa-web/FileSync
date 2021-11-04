@@ -1,0 +1,21 @@
+h1,h2,h3,h4,p,ul,ol,li,div,td,th,address,blockquote,nobr,b,i {
+ font-family:Arial,sans-serif; }
+
+h1 { font-size:26px; }
+
+h2 { font-size:21px; }
+
+h3 { font-size:18px; }
+
+p,ul,ol,li,div,td,th,address,blockquote { font-size:13px; }
+
+.Title { font-size:26px; margin-bottom:18px; }
+
+.Toc1 { font-size:21px; }
+
+.Toc2 { font-size:18px; }
+
+.Toc3 { font-size:13px; }
+
+.code { font-family:Courier New,Courier; font-size:13px; color:#0000C0; }
+

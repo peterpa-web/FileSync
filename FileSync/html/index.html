@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+
+<head>
+<title>FileSync Contents</title>
+<link rel="stylesheet" type="text/css" href="filesync.css">
+</head>
+
+<body link=blue vlink=purple>
+
+<p class="Title">FileSync Contents</p>
+<p class="Toc1"><a href="#Overview">1. Overview</a></p>
+<p class="Toc2"><a href="#DirView">1.1 Dir View</a></p>
+<p class="Toc2"><a href="#FileViews">1.2 File Views</a></p>
+<p class="Toc3"><a href="#TextView">1.2.1 Text View</a></p>
+<p class="Toc3"><a href="#XMLView">1.2.2 XML View</a></p>
+<p class="Toc3"><a href="#HexView">1.2.3 Hex View</a></p>
+<p class="Toc1"><a href="#Install">2 Installation & Update</a></p>
+<p class="Toc1"><a href="#TypicalUsage">3 Typical Usage</a></p>
+<p class="Toc1"><a href="#Common">4 Common Functions</a></p>
+<p class="Toc2"><a href="#Open">4.1 Open Files and Directories</a></p>
+<p class="Toc3"><a href="#Assoc">4.1.1 File Type Associations to prepared views</a></p>
+<p class="Toc3"><a href="#OpenDir">4.1.2 Open Directory</a></p>
+<p class="Toc3"><a href="#OpenFile">4.1.3 Open File</a></p>
+<p class="Toc2"><a href="#SideSel">4.2 Side Selection</a></p>
+<p class="Toc2"><a href="#Colors">4.3 Adapting Colors</a></p>
+<p class="Toc1"><a href="#CmdLine">5 Command Line Parameters</a></p>
+<p class="Toc1"><a href="#MKS">6 MKS Diff Tool Configuration</a></p>
+
+<h1><a name="Overview">1. Overview</a></h1>
+
+<p>FileSync is a utility for comparing and synchronizing directories and files.
+There is a Dir View and some different file views provided.</p>
+
+<h2><a name="DirView">1.1 Dir View <img src="dirviewicon.png" /></a></h2>
+<p><a href="viewdir.html">details</a></p>
+
+<h2><a name="FileViews">1.2 File Views <img src="fileviewicon.png" /></a></h2>
+<p>Several file views are provided to compare and synchronize two files.</p>
+
+<h3><a name="TextView">1.2.1 Text View</a></h3>
+<p><a href="viewtext.html">details</a></p>
+<h3><a name="XMLView">1.2.2 XML View</a></h3>
+<p><a href="viewtext.html">details</a></p>
+<h3><a name="HexView">1.2.3 Hex View</a></h3>
+<p><a href="viewhex.html">details</a></p>
+
+<h1><a name="Install">2 Installation & Update</a></h1>
+<p>Some default file extensions are assigned to the prepared views.
+Updating to a new version is performed by just installing the new version. In this case the stored settings are not changed.
+</p>
+
+<h1><a name="TypicalUsage">3 Typical Usage</a></h1>
+<ul>
+    <li>The application starts with the Dir View by default.</li>
+    <li>Open left and right Directories.</li>
+    <li>Copy / Replace missing or changed files.</li>
+    <li>Open a File View to compare files.</li>
+    <li>Synchronize File Contents.</li>
+    <li>Return to Dir View.</li>
+</ul>
+
+<h1><a name="Common">4 Common Functions</a></h1>
+
+<h2><a name="Open">4.1 Open Files and Directories</a></h2>
+<p>The following controls are prepared for opening files and directories 
+for the left and the right side of each view. The default view depends on 
+the configured associations for file extensions.</p>
+
+<h3><a name="Assoc">4.1.1 File Type Associations to prepared views</a></h3>
+<p>To modifiy the file extension associations to a view go to menu <b>View / Associations</b> that opens the following dialog:</p>
+<p><img src="assoc.png" /></p>
+<ul>
+    <li>Add a new association: Enter the File Extension, choose the view type and press <i>Add</i>.</li>
+    <li>Delete some associations: Select the extension(s) and press <i>Delete</i>.</li>
+    <li>Press <i>OK</i> to store your changes.</li>
+</ul>
+<p>All undefined extensions are shown using HexView.</p>
+
+<h3><a name="OpenDir">4.1.2 Open Directory</a></h3>
+<p>To show a directory in the Dir View there are several options to open it for the left or the right side:</p>
+<ul>
+    <li>The following ComboBox has multiple functions: <br />
+        <img src="combodir.png" /></li>
+    <ul>
+        <li>Press the button and select a most recently used path (MRU) to open the directory.</li>
+        <li>Enter or change the path shown with respect to MRU entries. The associated default view will be opened.</li>
+        <li>Use as drop target: Drag and drop an entry from any Explorer window to open the according default view.</li>
+        <li>Select and highlight the current view side by clicking on it.</li>
+        <li>The directory MRU is stored persistent when the application exits.</li>
+    </ul>
+    <li>Using the <b>File</b> menu works like the toolbar button below.</li> 
+    <li>Toolbar button <img src="opendiricon.png" /> opens the following selection dialog:</li> 
+</ul>
+<p><img src="opendirdlg.png" /></p>
+<p>Select the folder to be opened and press <i>OK</i>.</p>
+
+<h3><a name="OpenFile">4.1.3 Open File</a></h3>
+<p>To show a single file or a pair of files in one of the provided views there are several 
+options to open it for the left or the right side:</p>
+<ul>
+    <li>The ComboBox works like for directories except MRU is non persistent.</li> 
+    <li>Using the <b>File</b> menu works like the toolbar button below.</li> 
+    <li>Toolbar button <img src="openfileicon.png" /> opens the following selection dialog:</li> 
+</ul>
+<p><img src="openfiledlg.png" /></p>
+<p>Select the file to be opened. Optionally select a specific view instead of <i>default</i>. Press <i>Open</i> to open the file.</p>
+
+<h2><a name="SideSel">4.2 Side Selection</a></h2>
+
+<p>To select the source side for synchronisation operations you may:</p>
+<ul>
+    <li>click inside the view or</li> 
+    <li>go to the path selection ComboBox.</li> 
+    <li>use one of the side toolbar buttons left of the ComboBox</li> 
+</ul>
+<p>The ComboBox for the current side is highlighted.</p>
+
+<h2><a name="Colors">4.3 Adapting Colors</a></h2>
+
+<p>Here is the default color schema:</p>
+<p><img src="colorusage.png" /></p>
+
+<table border="1">
+<tr><th>Color</th><th>Meaning</th></tr>
+<tr><td>White</td><td>Equal lines</td></tr>
+<tr><td>Magenta/Yellow/Red</td><td>Line and Char Differences</td></tr>
+<tr><td>Green</td><td>Extra lines</td></tr>
+</table>
+<p></p>
+<p>For the DirView there is a slightly different meaning of the colors.</p>
+<p></p>
+<p>Menu <b>View / Colors</b> opens the following dialog for changing the colors:</p>
+
+<p><img src="colors.png" /></p>
+
+<h1><a name="CmdLine">5 Command Line Parameters</a></h1>
+
+<p>When the following command line parameters are given, the program will start with 
+a suitable view, normally a file view. In this case the stored window position will not be used or updated.</p>
+<p>Arg 1: Left file path</p>
+<p>Arg 2: Right file path</p>
+<p>Arg 3: (opt.) Left file title</p>
+<p>Arg 4: (opt.) Right file title</p>
+<p>Each argument must be quoted if containing spaces.</p>
+<p>If one of the optional arguments is given, both files are set to local read only.</p>
+
+
+<h1><a name="MKS">6 MKS Diff Tool Configuration</a></h1>
+
+<p>MKS Menu File / Edit Preferences</p>
+<p>Preferences Configuration: Configuration Management / Diff and Merge Tools</p>
+<p>Diff Tool Options: Custom Command:</p>
+<p class="code">C:\Program Files\Peter Pagel\FileSync\FileSync.exe &quot;{3}&quot; &quot;{4}&quot; &quot;{1}&quot; &quot;{2}&quot;</p>
+
+</body>
+
+</html>
