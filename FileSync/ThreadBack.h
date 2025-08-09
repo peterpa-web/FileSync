@@ -4,6 +4,7 @@
 #include "TaskIdle.h"
 
 #define WM_USER_STARTIDLE  (WM_APP + 1)
+#define WM_USER_ERR (WM_APP + 2)
 
 
 typedef CTypedPtrList<CPtrList,CTaskBase*> CTaskList;

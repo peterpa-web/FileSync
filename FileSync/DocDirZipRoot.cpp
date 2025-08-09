@@ -242,20 +242,22 @@ void CDocDirZipRoot::ScanPathInt( CListDirEntries &list, const CString &strPath 
 		m_bReadOnly = TRUE;
 		iMode = CZipArchive::zipOpenReadOnly;
 	}
+	bool bRetry = false;
 	try {
 		zipArc.Open( m_arcRoot.GetBasePath(), iMode );
 	}
 	catch ( CFileException *e ) {
 		TRACE1( "CDocDirZipRoot::ScanPathInt open m_cause=%d\n", e->m_cause );
-		if ( e->m_cause == 5 )
-		{
-			zipArc.Close( 1 );
-			m_bReadOnly = TRUE;
-			iMode = CZipArchive::zipOpenReadOnly;
-			zipArc.Open( m_arcRoot.GetBasePath(), iMode );
-		}
+		zipArc.Close( 1 );
+		if ( e->m_cause != CFileException::accessDenied )
+			throw e;
+		bRetry = true;
+		m_bReadOnly = TRUE;
+		iMode = CZipArchive::zipOpenReadOnly;
 		e->Delete();
 	}
+	if (bRetry)
+		zipArc.Open( m_arcRoot.GetBasePath(), iMode );
 	zipArc.SetIgnoredConsistencyChecks(CZipArchive::checkCRC);
 	int nMax = zipArc.GetCount();		// myZip.GetSize();
 	for ( WORD n = 0; n < nMax; ++n )

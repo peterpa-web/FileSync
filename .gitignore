@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/testbadzip.zip
+/Release Unicode MFC MD/ZipArchive.lib
+/Debug Unicode MFC MD/ZipArchive.idb
+/Debug Unicode MFC MD/ZipArchive.lib

@@ -68,16 +68,22 @@ UINT __cdecl CThreadBack::MyThreadProc( LPVOID pParam )
 			if ( pTaskCurr != NULL ) {
 				AssertX(AfxIsValidAddress(pTaskCurr, sizeof(CTaskBase)));
 				AssertX(AfxIsValidAddress(*(void**)pTaskCurr, sizeof(void*), FALSE));
-				nRC = pTaskCurr->Process(pThis);
+				try {
+					nRC = pTaskCurr->Process(pThis);
+				}
+				catch (CException* pe) {
+					PostMessage(pThis->m_hwndOwner, WM_USER_ERR, 0, 0);
+					pe->Delete();
+					nRC = 1;
+				}
 				BOOL bMain = pTaskCurr->IsMainTask();
 				pThis->m_nProgrBytesDone[bMain] += pTaskCurr->GetProgrBytesAll();
 				pThis->m_nTaskBytesDone[bMain] = 0;
 			}
-#ifdef _DEBUG
 			if ( nRC == 1 ) {
 				TRACE0( "CThreadBack::MyThreadProc() task canceled\n" );
+			//	return 1;
 			}
-#endif
 			pThis->m_nProgressDone += 100;
 		}
 		else

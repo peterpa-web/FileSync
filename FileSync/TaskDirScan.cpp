@@ -95,19 +95,32 @@ void CTaskDirScan::SetProgress( __int64 nDone )
 	m_pThreadBack->SetTaskBytesDone( m_bMain, nDone ); 
 }
 
-UINT CTaskDirScan::Process(CThreadBack *pThreadBack)
+UINT CTaskDirScan::Process(CThreadBack* pThreadBack)
 {
-	TRACE3( "CTaskDirScan::Process %d %d %s\n", m_nSide, m_nRecurr, m_pTreeData->GetItemNameDebug( m_posParent ) );
+	TRACE3("CTaskDirScan::Process %d %d %s\n", m_nSide, m_nRecurr, m_pTreeData->GetItemNameDebug(m_posParent));
 	m_pThreadBack = pThreadBack;
-	CDocDir *pDoc = ( m_nSide == 0 ? m_pDocL : m_pDocR );
-	if ( m_bForce )
+	CDocDir* pDoc = (m_nSide == 0 ? m_pDocL : m_pDocR);
+	if (m_bForce)
 		pDoc->Invalidate();
-	const int &nCancel = pThreadBack->GetCancel();
+	const int& nCancel = pThreadBack->GetCancel();
 	int nCancelMask = m_nSide + 1;
-	BOOL bNew = pDoc->ReScanAuto( m_posParent == NULL, nCancel, nCancelMask, &ScanProgressRoutine, this );
-	ASSERT( pDoc->m_bLock == FALSE );
-//    TRACE1( "CTaskDirScan::Process ReScanAuto = %d\n", bNew );
-	
+	try {
+		BOOL bNew = pDoc->ReScanAuto(m_posParent == NULL, nCancel, nCancelMask, &ScanProgressRoutine, this);
+		ASSERT(pDoc->m_bLock == FALSE);
+		//    TRACE1( "CTaskDirScan::Process ReScanAuto = %d\n", bNew );
+	}
+	catch (CException* pe) {
+		TCHAR szMsg[512] = _T("");
+		pe->GetErrorMessage(szMsg, 512, NULL);
+		CString s = (m_nSide == 0 ? L"Left side:\n" : L"Right side:\n") + CString(szMsg);
+		MessageBox(m_pThreadBack->GetHWndOwner(), s, nullptr, MB_ICONEXCLAMATION);
+#ifdef DEBUG
+		pDoc->m_bLock = FALSE;
+#endif
+		PostMessage(m_pThreadBack->GetHWndOwner(), WM_USER_ERR, m_nSide, 0);
+		pe->Delete();
+		return 1;
+	}
 	if ( IsCanceled() )
 		return 1;
 

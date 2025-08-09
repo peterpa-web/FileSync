@@ -206,4 +206,5 @@ public:
 	afx_msg void OnUpdateViewLink(CCmdUI *pCmdUI);
 	afx_msg void OnViewLink();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint point);
+	afx_msg LRESULT OnUserErr(UINT wParam, LONG lParam);
 };

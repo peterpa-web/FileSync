@@ -28,6 +28,7 @@ public:
 	void Highlight(BOOL b);
 	void Warn( BOOL b ) { m_bWarn = b; }
 	void SetDirMode() { m_bDirMode = TRUE; }
+//	void ClearListTop();
 
 protected:
 	DECLARE_MESSAGE_MAP()

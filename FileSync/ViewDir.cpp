@@ -130,6 +130,7 @@ BEGIN_MESSAGE_MAP(CViewDir, CViewFileSync)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_LINK, OnUpdateViewLink)
 	ON_COMMAND(ID_VIEW_LINK, OnViewLink)
 	ON_WM_MOUSEWHEEL()
+	ON_MESSAGE(WM_USER_ERR, OnUserErr)
 END_MESSAGE_MAP()
 
 void CViewDir::OnInitialUpdate2()
@@ -163,7 +164,7 @@ void CViewDir::OnInitialUpdate2()
 	HKEY hSecKey = AfxGetApp()->GetSectionKey( _T("ViewDir") );
 	if (hSecKey != NULL) {
 		DWORD dwSort = (DWORD)m_nSortType;
-		DWORD dwSize;
+		DWORD dwSize = 0;
 		LONG lResult = RegQueryValueEx(hSecKey,  _T("sort"), NULL, NULL, (LPBYTE)&dwSort, &dwSize );
 		if ( lResult == ERROR_SUCCESS )
 			m_nSortType = dwSort;
@@ -2595,4 +2596,16 @@ BOOL CViewDir::OnMouseWheel(UINT nFlags, short zDelta, CPoint point)
 	m_tree.SetFocus();
 
     return FALSE;
+}
+
+LRESULT CViewDir::OnUserErr(UINT wParam, LONG lParam)
+{
+//	CString str;
+//	str.Format(L"Open Error side=%d", (int)wParam);
+//	MessageBox(str);
+	if (wParam == 0)
+		m_comboDirLeft.SetWindowText(L"");
+	else
+		m_comboDirRight.SetWindowText(L"");
+	return 0;
 }

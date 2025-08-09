@@ -602,7 +602,15 @@ void CComboBoxDir::Highlight(BOOL b)
 		::PostMessage(m_hWnd, CB_SETEDITSEL, 0, MAKELONG(-1, -1));
 //		SetEditSel( -1, -1 );
 }
-
+/*
+void CComboBoxDir::ClearListTop()
+{
+	SetWindowText(L"");
+	int n = GetCurSel();
+	if (n >= 0)
+		DeleteString(n);
+}
+*/
 BOOL CComboBoxDir::IsAppActive() 
 { 
 	return ((CMainFrame*)GetParentFrame())->IsAppActive(); 
