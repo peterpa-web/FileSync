@@ -74,7 +74,7 @@ BOOL CFileSyncApp::InitInstance()
 	SetRegistryKey(_T("Peter Pagel"));
 #endif
 
-	TCHAR szFullPath[MAX_PATH];
+	TCHAR szFullPath[510];
 	GetModuleFileName( NULL, szFullPath, sizeof(szFullPath) );
 	TCHAR *pc = _tcsrchr(szFullPath, '\\');
 #pragma warning( push )

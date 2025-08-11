@@ -27,8 +27,20 @@ END_MESSAGE_MAP()
 
 BOOL CToolBarSearch::CreateExtra()
 {
+	LOGFONT logfont;
+	memset(&logfont, 0, sizeof(logfont));
+	// 10 point height Courier New font
+	CDC* pDC = GetDC();
+	int	cyPerInch = pDC->GetDeviceCaps(LOGPIXELSY);
+	ReleaseDC(pDC);
+	logfont.lfHeight = -MulDiv(8, cyPerInch, 72);
+	logfont.lfWeight = FW_NORMAL;
+	logfont.lfPitchAndFamily = VARIABLE_PITCH | FF_SWISS;
+	static TCHAR BASED_CODE szFaceName2[] = _T("Arial");
+	lstrcpy(logfont.lfFaceName, szFaceName2);
+	gSmallFont.CreateFontIndirect(&logfont);
 	// set up small font
-	gSmallFont.CreatePointFont(90, _T("DEFAULT"), NULL);
+//	gSmallFont.CreatePointFont(90, _T("DEFAULT"), NULL);
 
 	//set up the ComboBox control as a snap mode select box
     //
@@ -43,12 +55,14 @@ BOOL CToolBarSearch::CreateExtra()
     GetItemRect(index, &rect);
 
     //expand the rectangle to allow the combo box room to drop down
-    rect.top+=2;
+//    rect.top += 2;
+    rect.top -= 2;
+	int h = rect.bottom;
     rect.bottom += 200;
 
     // then .Create the combo box and show it
-    if (!m_comboSearch.Create(WS_CHILD|WS_VISIBLE|CBS_AUTOHSCROLL| 
-                                       CBS_DROPDOWN|CBS_HASSTRINGS,
+    if (!m_comboSearch.Create(WS_CHILD | WS_VISIBLE | CBS_AUTOHSCROLL | WS_VSCROLL |
+                                       CBS_DROPDOWN | CBS_HASSTRINGS,
                                        rect, this, IDC_SEARCH_C))
     {
         TRACE0("Failed to create combo-box\n");
@@ -56,5 +70,6 @@ BOOL CToolBarSearch::CreateExtra()
     }
 	m_comboSearch.SendMessage(WM_SETFONT, (WPARAM)HFONT(gSmallFont),TRUE);
 	m_comboSearch.ShowWindow(SW_SHOW);
+	m_comboSearch.SetItemHeight(-1, h);
 	return TRUE;
 }

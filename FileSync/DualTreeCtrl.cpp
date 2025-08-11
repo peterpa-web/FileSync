@@ -88,7 +88,7 @@ void CDualTreeCtrl::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 		sz = pDC->GetTextExtent(_T("Tg"));
 		ReleaseDC(pDC);
 		m_nItemHeight = sz.cy;
-		m_nCharWidth = (sz.cx+2) / 2;
+		m_nCharWidth = (sz.cx+2) / 2 + 1;
 		TRACE1("CDualTreeCtrl::MeasureItem cw=%d\n", m_nCharWidth);
 		UpdOffs();
 	}

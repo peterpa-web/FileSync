@@ -369,7 +369,7 @@ void CViewFileSync::OnSize(UINT nType, int cx, int cy)
 	int nCxVScroll = GetSystemMetrics(SM_CXVSCROLL);
 	int cx2 = (cx - nCxVScroll) / 2;
 	CRect rect;
-	rect.top = 1;
+	rect.top = 3; // 1;
 	rect.bottom = rect.top + 19;
 	rect.left = 1;
 	rect.right = rect.left + 19;
@@ -425,7 +425,7 @@ void CViewFileSync::OnSize(UINT nType, int cx, int cy)
 
 	// listbox or tree
 	rect.left = 0;
-	rect.top = 22;
+	rect.top = nCxVScroll + 3;	// 22;
 	rect.bottom = cy;
 	rect.right = cx;
 	MoveClient( rect );
