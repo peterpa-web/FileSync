@@ -152,6 +152,9 @@ BOOL CFileSyncApp::InitInstance()
 	pDocTemplate->SetIconNo( 1 );
 	AddDocTemplate(pDocTemplate);
 
+	CArcRoot ar;
+	ar.CleanTemp();
+
     CString csCmd = m_lpCmdLine;
 	CStringArray csArgs;
 	SplitCmdLine(csCmd, csArgs);

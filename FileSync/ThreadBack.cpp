@@ -72,8 +72,8 @@ UINT __cdecl CThreadBack::MyThreadProc( LPVOID pParam )
 					nRC = pTaskCurr->Process(pThis);
 				}
 				catch (CException* pe) {
-					PostMessage(pThis->m_hwndOwner, WM_USER_ERR, 0, 0);
-					pe->Delete();
+					PostMessage(pThis->m_hwndOwner, WM_USER_ERR, 2, (LPARAM)pe);
+				//	pe->Delete();
 					nRC = 1;
 				}
 				BOOL bMain = pTaskCurr->IsMainTask();

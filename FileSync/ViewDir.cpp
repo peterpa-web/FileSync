@@ -2600,12 +2600,20 @@ BOOL CViewDir::OnMouseWheel(UINT nFlags, short zDelta, CPoint point)
 
 LRESULT CViewDir::OnUserErr(UINT wParam, LONG lParam)
 {
-//	CString str;
-//	str.Format(L"Open Error side=%d", (int)wParam);
-//	MessageBox(str);
+	CException* pe = (CException*)lParam;
+	TCHAR szMsg[512] = _T("");
+	pe->GetErrorMessage(szMsg, 512, NULL);
+	CString s;
+	if (wParam == 0)
+		s = L"Left side:\n";
+	else if (wParam == 1)
+		s = L"Right side:\n";
+	s += szMsg;
+	pe->Delete();
+	MessageBox(s, nullptr, MB_ICONEXCLAMATION);
 	if (wParam == 0)
 		m_comboDirLeft.SetWindowText(L"");
-	else
+	else if (wParam == 1)
 		m_comboDirRight.SetWindowText(L"");
 	return 0;
 }

@@ -181,3 +181,78 @@ BOOL CArcRoot::CreateTempSubDir( const CString &strPathName )			// assures that 
 	}
 	return TRUE;
 }
+
+void CArcRoot::CleanTemp()
+{
+	CString strTemp;
+	LPTSTR lpTempFileName = strTemp.GetBuffer(MAX_PATH);
+	DWORD dwRc = ::GetTempPath(MAX_PATH, lpTempFileName);
+	if (dwRc == 0)
+	{
+		AfxThrowFileException(CFileException::genericException, GetLastError(), _T("(tmp)"));
+	}
+	CString strBasePath = lpTempFileName;
+	strBasePath += _T("\\FileSync*");
+	CStringList listDirs;
+	CFileFind finder;
+	BOOL bFound = finder.FindFile(strBasePath);
+	if (!bFound)
+		return;
+	while (bFound)
+	{
+		bFound = finder.FindNextFile();
+		if (finder.IsDots())
+			continue;
+		if (finder.IsHidden())
+			continue;
+		if (finder.IsDirectory())
+		{
+			CString strName = finder.GetFileName();
+			CTime timeMod;
+			finder.GetLastWriteTime(timeMod);
+			CString strDate = timeMod.Format(L"%y/%m/%d %H:%M:%S");
+			CString strMsg;
+			strMsg.Format(L"Delete %s\nfrom %s?", strName, strDate);
+			int rc = AfxMessageBox(strMsg, MB_ICONQUESTION | MB_YESNOCANCEL);
+			if (rc == IDYES)
+				listDirs.AddTail(finder.GetFilePath());
+			else if (rc == IDCANCEL)
+				return;
+			continue;
+		}
+	}
+	POSITION pos = listDirs.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CString strPath = listDirs.GetNext(pos);
+		CleanTempSub(strPath);
+	}
+}
+
+void CArcRoot::CleanTempSub(const CString& strPath)
+{
+	CStringList listDirs;
+	CFileFind finder;
+	BOOL bFound = finder.FindFile(strPath + L"\\*");
+	while (bFound)
+	{
+		bFound = finder.FindNextFile();
+		if (finder.IsDots())
+			continue;
+		if (finder.IsHidden())
+			continue;
+		if (finder.IsDirectory())
+		{
+			listDirs.AddTail(finder.GetFilePath());
+			continue;
+		}
+		DeleteFile(finder.GetFilePath());
+	}
+	POSITION pos = listDirs.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CString strPath = listDirs.GetNext(pos);
+		CleanTempSub(strPath);
+	}
+	RemoveDirectory(strPath);
+}

@@ -240,6 +240,7 @@ void CMainFrame::OnClose()
 			return;
 		pDirView->DeleteContents();
 	}
+	TRACE0("call CFrameWnd::OnClose\n");
 	CFrameWnd::OnClose();
 }
 

@@ -13,6 +13,8 @@ protected:
 	CString m_strTempRoot;
 	CString m_strFilter;
 
+	void CleanTempSub(const CString& strPath);
+
 public:
 	void SetBasePath( LPCTSTR lpszPathName ) { m_strBasePath = lpszPathName; }
 	const CString GetBasePath() const { return m_strBasePath; }
@@ -25,4 +27,5 @@ public:
 	CString GetNewTempRoot();
 	BOOL RemoveTempRoot( CStringArray &astrFiles );		// remove temp directory & contained files
 	BOOL CreateTempSubDir( const CString &strPathName );
+	void CleanTemp();
 };

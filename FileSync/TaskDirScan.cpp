@@ -110,15 +110,11 @@ UINT CTaskDirScan::Process(CThreadBack* pThreadBack)
 		//    TRACE1( "CTaskDirScan::Process ReScanAuto = %d\n", bNew );
 	}
 	catch (CException* pe) {
-		TCHAR szMsg[512] = _T("");
-		pe->GetErrorMessage(szMsg, 512, NULL);
-		CString s = (m_nSide == 0 ? L"Left side:\n" : L"Right side:\n") + CString(szMsg);
-		MessageBox(m_pThreadBack->GetHWndOwner(), s, nullptr, MB_ICONEXCLAMATION);
 #ifdef DEBUG
 		pDoc->m_bLock = FALSE;
 #endif
-		PostMessage(m_pThreadBack->GetHWndOwner(), WM_USER_ERR, m_nSide, 0);
-		pe->Delete();
+		PostMessage(m_pThreadBack->GetHWndOwner(), WM_USER_ERR, m_nSide, (LPARAM)pe);
+		//pe->Delete();
 		return 1;
 	}
 	if ( IsCanceled() )

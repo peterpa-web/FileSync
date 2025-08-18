@@ -47,5 +47,5 @@
 #include <afxdisp.h>
 #include <afxdlgs.h>
 
-#include "ThreadTrace.h"
+// #include "ThreadTrace.h"
 #include "Storage.h"
