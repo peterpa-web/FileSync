@@ -17,9 +17,9 @@
 
 // CMainFrame
 
-IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
+IMPLEMENT_DYNCREATE(CMainFrame, CFrameWndEx)
 
-BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
+BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
 	ON_WM_CLOSE()
@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 //	ON_UPDATE_COMMAND_UI(ID_INDICATOR_RIGHT, OnUpdateIndicator)
 	ON_WM_ACTIVATEAPP()
 	ON_WM_SIZE()
+	ON_REGISTERED_MESSAGE(AFX_WM_RESETTOOLBAR, OnToolbarReset)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -64,11 +65,12 @@ CMainFrame::~CMainFrame()
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
+	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
-		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
+		CRect(), IDR_VIEWDIR) ||
 //		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))	// pContext->m_pNewDocTemplate->m_nIDResource ?????
 		!m_wndToolBar.LoadToolBar(IDR_VIEWDIR))
 	{
@@ -77,7 +79,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 	if (!m_wndToolBarSearch.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
-		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
+		CRect(), IDR_TOOL_SEARCH) ||
 		!m_wndToolBarSearch.LoadToolBar(IDR_TOOL_SEARCH))
 	{
 		TRACE0("Failed to create search toolbar\n");
@@ -97,11 +100,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.SetPaneWidth (nStatusProgress, 80);
 
 	// TODO: Delete these three lines if you don't want the toolbar to be dockable
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_TOP);
-	m_wndToolBarSearch.EnableDocking(CBRS_ALIGN_TOP);
-	EnableDocking(CBRS_ALIGN_TOP);
-	DockControlBar(&m_wndToolBar);
-	DockControlBar(&m_wndToolBarSearch);
+	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndToolBarSearch.EnableDocking(CBRS_ALIGN_ANY);
+//	EnableDocking(CBRS_ALIGN_TOP);
+//	DockControlBar(&m_wndToolBar);
+//	DockControlBar(&m_wndToolBarSearch);
+	EnableDocking(CBRS_ALIGN_ANY);
+	DockPane(&m_wndToolBarSearch);
+	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
 
 	m_progressMan.Init( GetSafeHwnd() );
 	m_progressMan.SetVisible( FALSE );
@@ -125,7 +131,7 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT, CCreateContext* pContext)
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-	if( !CFrameWnd::PreCreateWindow(cs) )
+	if( !CFrameWndEx::PreCreateWindow(cs) )
 		return FALSE;
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
@@ -142,12 +148,12 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 #ifdef _DEBUG
 void CMainFrame::AssertValid() const
 {
-	CFrameWnd::AssertValid();
+	CFrameWndEx::AssertValid();
 }
 
 void CMainFrame::Dump(CDumpContext& dc) const
 {
-	CFrameWnd::Dump(dc);
+	CFrameWndEx::Dump(dc);
 }
 
 #endif //_DEBUG
@@ -171,7 +177,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		return TRUE;
 
 	// otherwise, do default handling
-	return CFrameWnd::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+	return CFrameWndEx::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
 }
 
 BOOL CMainFrame::OnIdle(LONG lCount)
@@ -185,6 +191,9 @@ BOOL CMainFrame::OnIdle(LONG lCount)
 		m_nToolbarID = ((CViewFileSync*)pView)->GetCurrToolbarID();
 		m_wndToolBar.LoadBitmap( m_nToolbarID );
 		m_wndToolBar.Invalidate();
+		DockPane(&m_wndToolBarSearch);
+		DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
+
 //		m_wndToolBar.OnUpdateCmdUI(this, TRUE);  // OnIdleUpdateCmdUI(1,0);
 	}
 	BOOL bIdle = ((CViewFileSync*)pView)->OnIdle( lCount );
@@ -240,8 +249,8 @@ void CMainFrame::OnClose()
 			return;
 		pDirView->DeleteContents();
 	}
-	TRACE0("call CFrameWnd::OnClose\n");
-	CFrameWnd::OnClose();
+	TRACE0("call CFrameWndEx::OnClose\n");
+	CFrameWndEx::OnClose();
 }
 
 void CMainFrame::SaveWinPos()
@@ -320,13 +329,16 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 	VERIFY( m_wndToolBar.LoadToolBar( pViewNewFS->GetMenueID() ) );
 //	VERIFY( LoadAccelTable( MAKEINTRESOURCE( pViewNewFS->GetMenueID() ) ) );	// see LoadFrame()
 	RecalcLayout( TRUE );
-	CRect rect;
-	m_wndToolBar.GetWindowRect(rect);
-	CRect rectS;
-	m_wndToolBarSearch.GetWindowRect(rectS);
-	rectS.MoveToY(rect.top);
-	rectS.MoveToX(rect.right);
-	DockControlBar(&m_wndToolBarSearch, AFX_IDW_DOCKBAR_TOP, rectS);
+	DockPane(&m_wndToolBarSearch);
+	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
+
+//	CRect rect;
+//	m_wndToolBar.GetWindowRect(rect);
+//	CRect rectS;
+//	m_wndToolBarSearch.GetWindowRect(rectS);
+//	rectS.MoveToY(rect.top);
+//	rectS.MoveToX(rect.right);
+//	DockControlBar(&m_wndToolBarSearch, AFX_IDW_DOCKBAR_TOP, rectS);		// todo ???
 
 	SetMenu( pViewNewFS->GetMenu() );
 	HICON hBigIcon = GetIcon(TRUE);
@@ -338,7 +350,7 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 	CString strTitle;
 	strTitle.LoadString( pViewNewFS->GetTitleID() );
 	SetWindowText( strTitle );
-	CFrameWnd::SetActiveView( pViewNew );
+	CFrameWndEx::SetActiveView( pViewNew );
 	RecalcLayout();
 }
 
@@ -355,7 +367,7 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 
 void CMainFrame::OnDestroy()
 {
-	CFrameWnd::OnDestroy();
+	CFrameWndEx::OnDestroy();
 
 	// TODO: Add your message handler code here
 }
@@ -363,7 +375,7 @@ void CMainFrame::OnDestroy()
 BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle , CWnd* pParentWnd , CCreateContext* pContext)
 {
 	if ( (dwDefaultStyle & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW )
-		return CFrameWnd::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
+		return CFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
 
 	// TODO: create new view
 /*
@@ -389,7 +401,7 @@ void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	POINT ptMinTrackSize = { 500, 200 };
 	lpMMI->ptMinTrackSize = ptMinTrackSize;
 
-	CFrameWnd::OnGetMinMaxInfo(lpMMI);
+	CFrameWndEx::OnGetMinMaxInfo(lpMMI);
 }
 
 //void CMainFrame::OnUpdateIndicator(CCmdUI* pCmdUI)
@@ -437,7 +449,7 @@ void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 
 void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 {
-	CFrameWnd::OnActivateApp(bActive, dwThreadID);
+	CFrameWndEx::OnActivateApp(bActive, dwThreadID);
 
 	m_bActive = bActive;
 	CViewFileSync *pView = (CViewFileSync*)GetActiveView();
@@ -445,3 +457,12 @@ void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 		pView->OnDeactivateApp();
 }
 
+LRESULT CMainFrame::OnToolbarReset(WPARAM wparm, LPARAM)
+{
+	UINT uitoolbarid = (UINT)wparm;
+	if (uitoolbarid == IDR_TOOL_SEARCH) {
+		m_wndToolBarSearch.Reset();
+	}
+
+	return 0;
+}

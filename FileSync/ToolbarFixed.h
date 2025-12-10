@@ -1,9 +1,9 @@
 #pragma once
-
+#include <afxtoolbar.h>
 
 // CToolBarFixed
 
-class CToolBarFixed : public CToolBar
+class CToolBarFixed : public CMFCToolBar
 {
 	DECLARE_DYNAMIC(CToolBarFixed)
 

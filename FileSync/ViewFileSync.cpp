@@ -370,52 +370,52 @@ void CViewFileSync::OnSize(UINT nType, int cx, int cy)
 	int cx2 = (cx - nCxVScroll) / 2;
 	CRect rect;
 	rect.top = 3; // 1;
-	rect.bottom = rect.top + 19;
+	rect.bottom = rect.top + nCxVScroll;	// 19;
 	rect.left = 1;
-	rect.right = rect.left + 19;
+	rect.right = rect.left + nCxVScroll;	// 19;
 	m_buttonsLeft[0].MoveWindow( rect );
 	m_buttonsLeft[0].SizeToContent();
 	if ( m_buttonsLeft[1].m_hWnd != NULL )
 	{
-		rect.right = rect.Width() + 21;
-		rect.left = 21;
+		rect.left = rect.right + 2;	// 21;
+		rect.right = rect.left + nCxVScroll + 2;	// 21;
 		m_buttonsLeft[1].MoveWindow( rect );
-		m_buttonsLeft[1].SizeToContent();
+//		m_buttonsLeft[1].SizeToContent();
 	}
 	if ( m_buttonsLeft[2].m_hWnd != NULL )
 	{
-		rect.right = rect.Width() + 21 + 20;
-		rect.left = 21 + 20;
+		rect.left = rect.right + 2;	// 21 + 20;
+		rect.right = rect.left + nCxVScroll + 2;	// 21 + 20;
 		m_buttonsLeft[2].MoveWindow( rect );
-		m_buttonsLeft[2].SizeToContent();
+//		m_buttonsLeft[2].SizeToContent();
 	}
-	rect.right = rect.Width() + cx2 + 3;
 	rect.left = cx2 + 3;
+	rect.right = rect.left + nCxVScroll;
 	m_buttonsRight[0].MoveWindow( rect );
-	m_buttonsRight[0].SizeToContent();
+//	m_buttonsRight[0].SizeToContent();
 	if ( m_buttonsRight[1].m_hWnd != NULL )
 	{
-		rect.right = rect.Width() + cx2 + 3 + 20;
-		rect.left = cx2 +3 + 20;
+		rect.left = rect.right + 2;
+		rect.right = rect.left + nCxVScroll + 2;
 		m_buttonsRight[1].MoveWindow( rect );
-		m_buttonsRight[1].SizeToContent();
+//		m_buttonsRight[1].SizeToContent();
 	}
 	if ( m_buttonsRight[2].m_hWnd != NULL )
 	{
-		rect.right = rect.Width() + cx2 + 3 + 20 + 20;
-		rect.left = cx2 + 3 + 20 + 20;
+		rect.left = rect.right + 2;
+		rect.right = rect.left + nCxVScroll + 2;
 		m_buttonsRight[2].MoveWindow( rect );
-		m_buttonsRight[2].SizeToContent();
+//		m_buttonsRight[2].SizeToContent();
 	}
 
 	// path edit
 //	rect.top = 2;
 	rect.top = 0;
 //	rect.bottom = rect.top + 15;
-	rect.bottom = rect.top + 275;
+	rect.bottom = rect.top + 255 + nCxVScroll;
 	rect.left = 0;
 	CRect rectR( rect );
-	rect.left = ( m_bSaveMore ? 60 : 20 );
+	rect.left = 4 + ( m_bSaveMore ? 3 * (nCxVScroll + 2) : nCxVScroll + 2);		// 60 : 20
 	rect.right = cx2 - 2;
 	m_comboDirLeft.MoveWindow( rect );
 	rectR = rect;
@@ -556,11 +556,11 @@ void CViewFileSync::OnUpdateViewRefresh(CCmdUI *pCmdUI)
 //					m_pDoc[left]->IsModified() ||
 //					m_pDoc[right]->IsModified() );
 	pCmdUI->Enable( TRUE );
-	//CToolBar &toolBar = GetParentFrame()->GetToolBar();
+	//CMFCToolBar &toolBar = GetParentFrame()->GetToolBar();
 	int nButton = pCmdUI->m_nIndex;
 	int nButtonLast = pCmdUI->m_nIndexMax - 1;
 	if ( pCmdUI->m_pOther != NULL && nButton >= 0 ) {
-		CToolBar *pToolBar = (CToolBar*)pCmdUI->m_pOther;
+		CMFCToolBar *pToolBar = (CMFCToolBar*)pCmdUI->m_pOther;
 		UINT nID;
 		UINT nStyle;
 		int nImage;

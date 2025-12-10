@@ -8,7 +8,7 @@
 
 // CToolbarFixed
 
-IMPLEMENT_DYNAMIC(CToolBarFixed, CToolBar)
+IMPLEMENT_DYNAMIC(CToolBarFixed, CMFCToolBar)
 CToolBarFixed::CToolBarFixed()
 {
 }
@@ -18,7 +18,7 @@ CToolBarFixed::~CToolBarFixed()
 }
 
 
-BEGIN_MESSAGE_MAP(CToolBarFixed, CToolBar)
+BEGIN_MESSAGE_MAP(CToolBarFixed, CMFCToolBar)
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_RBUTTONDOWN()
@@ -33,14 +33,14 @@ void CToolBarFixed::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
 
-	CWnd::OnLButtonDown(nFlags, point);
+	CMFCToolBar::OnLButtonDown(nFlags, point);
 }
 
 void CToolBarFixed::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	// TODO: Fügen Sie hier Ihren Meldungsbehandlungscode ein, und/oder benutzen Sie den Standard.
 
-	CWnd::OnLButtonDblClk(nFlags, point);
+	CMFCToolBar::OnLButtonDblClk(nFlags, point);
 }
 
 void CToolBarFixed::OnRButtonDown(UINT nFlags, CPoint point)

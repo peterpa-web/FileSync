@@ -2,6 +2,7 @@
 //
 
 #pragma once
+#include <afxframewndex.h>
 #include "ToolBarFixed.h"
 #include "ToolBarSearch.h"
 #include "REBProgressDialog.h"
@@ -10,7 +11,7 @@
 //class CDirCompFrmWnd;
 class CViewFileSync;
 
-class CMainFrame : public CFrameWnd
+class CMainFrame : public CFrameWndEx
 {
 	
 public:
@@ -31,7 +32,7 @@ public:
 	CString GetSearchText() { return m_wndToolBarSearch.GetSearchText(); }
 	BOOL UpdateMessageText( const CString &strMsg, int nProgress = 0 );
 	BOOL IsAppActive() { return m_bActive; }
-	CToolBar& GetToolBar() { return m_wndToolBar; }
+	CMFCToolBar& GetToolBar() { return m_wndToolBar; }
 	REBProgressManager* GetProgressMan() { return &m_progressMan; }
 	CViewFileSync* GetNewClient() const { return m_pNewClient; }
 
@@ -81,6 +82,7 @@ public:
 	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	afx_msg void OnActivateApp(BOOL bActive, DWORD dwThreadID);
+	afx_msg LRESULT OnToolbarReset(WPARAM wparm, LPARAM);
 };
 
 

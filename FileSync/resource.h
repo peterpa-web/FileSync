@@ -118,9 +118,9 @@
 #define ID_DIR_COLLAPSE                 32788
 #define ID_DIR_EXPANDPARTIAL            32789
 #define ID_DIR_SETEQUAL                 32790
-#define ID_SEARCH_B                     32791
-#define ID_SEARCH_F                     32793
-#define ID_SEARCH_C                     32794
+#define ID_SEARCH_B                     32792
+#define ID_SEARCH_C                     32793
+#define ID_SEARCH_F                     32794
 #define ID_DIR_SELECTDIFFS              32795
 #define ID_VIEW_TEXT                    32796
 #define ID_FILE_MODELEFT                32797
