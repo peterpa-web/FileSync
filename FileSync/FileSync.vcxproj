@@ -128,7 +128,6 @@
     <ClCompile Include="ChangeNotification.cpp" />
     <ClCompile Include="ColorsDlg.cpp" />
     <ClCompile Include="ComboBoxDir.cpp" />
-    <ClCompile Include="ComboSearch.cpp" />
     <ClCompile Include="ConvertUTF.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -229,7 +228,6 @@
     <ClInclude Include="ChangeNotification.h" />
     <ClInclude Include="ColorsDlg.h" />
     <ClInclude Include="ComboBoxDir.h" />
-    <ClInclude Include="ComboSearch.h" />
     <ClInclude Include="ConvertUTF.h" />
     <ClInclude Include="DialogReplace.h" />
     <ClInclude Include="DirEntry.h" />

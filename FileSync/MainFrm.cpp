@@ -61,6 +61,15 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 	AfxGetApp()->m_pMainWnd = NULL;
+
+	POSITION pos = m_mapToolBarCache.GetStartPosition();
+	while (pos != NULL)
+	{
+		int n;
+		CToolBarFixed* pToolBar;
+		m_mapToolBarCache.GetNextAssoc(pos, n, pToolBar);
+		delete pToolBar;
+	}
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -68,15 +77,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
-		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
-		CRect(), IDR_VIEWDIR) ||
-//		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))	// pContext->m_pNewDocTemplate->m_nIDResource ?????
-		!m_wndToolBar.LoadToolBar(IDR_VIEWDIR))
-	{
-		TRACE0("Failed to create toolbar\n");
-		return -1;      // fail to create
-	}
+//	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
+//		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
+//		CRect(), IDR_VIEWDIR) ||
+//		!m_wndToolBar.LoadToolBar(IDR_VIEWDIR))
+//	{
+//		TRACE0("Failed to create toolbar\n");
+//		return -1;      // fail to create
+//	}
 
 	if (!m_wndToolBarSearch.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
 		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
@@ -86,9 +94,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create search toolbar\n");
 		return -1;      // fail to create
 	}
-
-	if (!m_wndToolBarSearch.CreateExtra())
-		return -1;
 
 	if (!m_wndStatusBar.Create(this) ||
 		!m_wndStatusBar.SetIndicators(indicators,
@@ -100,14 +105,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.SetPaneWidth (nStatusProgress, 80);
 
 	// TODO: Delete these three lines if you don't want the toolbar to be dockable
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
+//	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndToolBarSearch.EnableDocking(CBRS_ALIGN_ANY);
-//	EnableDocking(CBRS_ALIGN_TOP);
-//	DockControlBar(&m_wndToolBar);
-//	DockControlBar(&m_wndToolBarSearch);
 	EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndToolBarSearch);
-	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
+//	DockPane(&m_wndToolBarSearch);
+//	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
+	SwitchToolBar(IDR_VIEWDIR);
 
 	m_progressMan.Init( GetSafeHwnd() );
 	m_progressMan.SetVisible( FALSE );
@@ -188,21 +191,16 @@ BOOL CMainFrame::OnIdle(LONG lCount)
 		return FALSE;
 	if ( ((CViewFileSync*)pView)->GetCurrToolbarID() != m_nToolbarID )
 	{
-		m_nToolbarID = ((CViewFileSync*)pView)->GetCurrToolbarID();
-		m_wndToolBar.LoadBitmap( m_nToolbarID );
-		m_wndToolBar.Invalidate();
-		DockPane(&m_wndToolBarSearch);
-		DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
+		int nToolbarID = ((CViewFileSync*)pView)->GetCurrToolbarID();
+		SwitchToolBar(nToolbarID);
+//		m_wndToolBar.LoadBitmap( m_nToolbarID );
+//		m_wndToolBar.Invalidate();
+//		DockPane(&m_wndToolBarSearch);
+//		DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
 
-//		m_wndToolBar.OnUpdateCmdUI(this, TRUE);  // OnIdleUpdateCmdUI(1,0);
 	}
 	BOOL bIdle = ((CViewFileSync*)pView)->OnIdle( lCount );
-//	if (bIdle && lCount==5)
-//		SetMessageText(_T("Busy"));
-//	if (!bIdle)
-//		SetMessageText(_T("Ready"));
 	return bIdle;
-//	return FALSE;
 }
 
 BOOL CMainFrame::UpdateMessageText( const CString &strMsg, int nProgress /* = 0 */ )
@@ -281,6 +279,34 @@ void CMainFrame::SaveWinPos()
 	}
 }
 
+void CMainFrame::SwitchToolBar(int nToolbarID)
+{
+	if (nToolbarID == m_nToolbarID)
+		return;
+
+	if (m_nToolbarID != 0)
+	{
+		CToolBarFixed* pOldToolBar;
+		if (m_mapToolBarCache.Lookup(m_nToolbarID, pOldToolBar))
+			pOldToolBar->ShowWindow(SW_HIDE);
+	}
+	CToolBarFixed* pToolBar = nullptr;
+	if (m_mapToolBarCache.Lookup(nToolbarID, pToolBar))
+		pToolBar->ShowWindow(SW_SHOW);
+	else
+	{
+		pToolBar = new CToolBarFixed;
+		VERIFY(pToolBar->CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
+			| CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC, CRect(), nToolbarID));
+		VERIFY(pToolBar->LoadToolBar(nToolbarID));
+		m_mapToolBarCache.SetAt(nToolbarID, pToolBar);
+		pToolBar->EnableDocking(CBRS_ALIGN_ANY);
+	}
+	DockPane(&m_wndToolBarSearch);
+	DockPaneLeftOf(pToolBar, &m_wndToolBarSearch);
+	m_nToolbarID = nToolbarID;
+}
+
 BOOL CMainFrame::RestoreWinPos()
 {
 	HKEY hSecKey = AfxGetApp()->GetSectionKey( _T("MainFrm") );
@@ -325,20 +351,11 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 		pViewNewFS->Show(TRUE);
 	}
 	TRACE0( "CMainFrame::SetActiveView LoadToolBar & Menue\n" );
-//	m_pViewActive = pViewNew;
-	VERIFY( m_wndToolBar.LoadToolBar( pViewNewFS->GetMenueID() ) );
-//	VERIFY( LoadAccelTable( MAKEINTRESOURCE( pViewNewFS->GetMenueID() ) ) );	// see LoadFrame()
+//	VERIFY( m_wndToolBar.LoadToolBar( pViewNewFS->GetMenueID() ) );
 	RecalcLayout( TRUE );
-	DockPane(&m_wndToolBarSearch);
-	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
-
-//	CRect rect;
-//	m_wndToolBar.GetWindowRect(rect);
-//	CRect rectS;
-//	m_wndToolBarSearch.GetWindowRect(rectS);
-//	rectS.MoveToY(rect.top);
-//	rectS.MoveToX(rect.right);
-//	DockControlBar(&m_wndToolBarSearch, AFX_IDW_DOCKBAR_TOP, rectS);		// todo ???
+	SwitchToolBar(pViewNewFS->GetMenueID());
+//	DockPane(&m_wndToolBarSearch);
+//	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
 
 	SetMenu( pViewNewFS->GetMenu() );
 	HICON hBigIcon = GetIcon(TRUE);

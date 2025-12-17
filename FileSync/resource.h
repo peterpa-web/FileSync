@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by FileSync.rc
+// Von Microsoft Visual C++ generierte Includedatei.
+// Verwendet durch FileSync.rc
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
@@ -55,7 +55,7 @@
 #define IDB_DIRCOMP                     198
 #define IDB_FILECOMP                    199
 #define IDC_LIST                        1000
-#define IDC_BIGICON                        1000
+#define IDC_BIGICON                     1000
 #define IDC_LIST_RIGHT                  1001
 #define IDC_SCROLL_HORIZ                1002
 #define IDC_SCROLL_VERT                 1003
@@ -90,7 +90,6 @@
 #define IDC_BUTTON_C5                   1031
 #define IDC_BUTTON_OPEN_LEFT            1031
 #define IDC_BUTTON_OPEN_RIGHT           1032
-#define IDC_COMBO1                      1033
 #define IDC_COMBO_TYPE                  1033
 #define IDC_COMBO_CSET_L                1033
 #define IDC_STATIC_VERSION              1034
@@ -119,7 +118,6 @@
 #define ID_DIR_EXPANDPARTIAL            32789
 #define ID_DIR_SETEQUAL                 32790
 #define ID_SEARCH_B                     32792
-#define ID_SEARCH_C                     32793
 #define ID_SEARCH_F                     32794
 #define ID_DIR_SELECTDIFFS              32795
 #define ID_VIEW_TEXT                    32796
@@ -144,9 +142,7 @@
 #define ID_SORT_RIGHT_TIME_DESC         32816
 #define ID_DIR_FREE                     32817
 #define ID_VIEW_PROJECT                 32818
-#define ID_VIEW_LINK					32819
-//#define ID_INDICATOR_LEFT               59142
-//#define ID_INDICATOR_RIGHT              59143
+#define ID_VIEW_LINK                    32819
 
 // Next default values for new objects
 // 

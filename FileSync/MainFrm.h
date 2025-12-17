@@ -26,18 +26,17 @@ public:
 public:
 	BOOL OnIdle(LONG lCount);
 	void SetActiveView( CView *pViewNew, BOOL bNotify = TRUE );
-//	CViewFileSync* GetViewDir() { return m_pViewDir; }
-//	void SetIndicator( int nId, BOOL b );
-//	BOOL GetIndicator( int nId );
 	CString GetSearchText() { return m_wndToolBarSearch.GetSearchText(); }
 	BOOL UpdateMessageText( const CString &strMsg, int nProgress = 0 );
 	BOOL IsAppActive() { return m_bActive; }
-	CMFCToolBar& GetToolBar() { return m_wndToolBar; }
+//	CMFCToolBar& GetToolBar() { return m_wndToolBar; }
+	CToolBarSearch& GetToolBarSearch() { return m_wndToolBarSearch; }
 	REBProgressManager* GetProgressMan() { return &m_progressMan; }
 	CViewFileSync* GetNewClient() const { return m_pNewClient; }
 
 protected:
 	void SaveWinPos();
+	void SwitchToolBar(int nToolbarID);
 	REBProgressManager m_progressMan;
 	CViewFileSync* m_pNewClient;
 
@@ -60,9 +59,9 @@ public:
 
 protected:  // control bar embedded members
 	CProgStatusBar m_wndStatusBar;
-	CToolBarFixed  m_wndToolBar;
+	CMap<int, int, CToolBarFixed*, CToolBarFixed*&> m_mapToolBarCache;
+//	CToolBarFixed  m_wndToolBar;
 	CToolBarSearch m_wndToolBarSearch;
-//	CViewFileSync* m_pViewDir;
 	int m_nToolbarID;
 	BOOL m_bIndicatorLeft;
 	BOOL m_bIndicatorRight;
@@ -73,11 +72,9 @@ protected:  // control bar embedded members
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSetFocus(CWnd *pOldWnd);
-//	afx_msg void OnUpdateIndicator(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnClose();
-//	afx_msg void OnViewDircomp();
 	afx_msg void OnDestroy();
 	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
