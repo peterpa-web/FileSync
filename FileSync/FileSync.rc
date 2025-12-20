@@ -486,7 +486,6 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM "&Dir Compare",                ID_VIEW_DIRCOMP
         MENUITEM SEPARATOR
@@ -554,7 +553,6 @@ BEGIN
         MENUITEM "Check Left",                  ID_VIEW_CHECKLEFT
         MENUITEM "Check Right",                 ID_VIEW_CHECKRIGHT
         MENUITEM SEPARATOR
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
     POPUP "&Help"
@@ -614,7 +612,6 @@ BEGIN
         MENUITEM "&Associations ...",           ID_VIEW_ASSOCIATIONS
         MENUITEM "C&olors ...",                 ID_VIEW_COLORS
         MENUITEM SEPARATOR
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "Status &Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM "Project &files",              ID_VIEW_PROJECT
     END
@@ -653,7 +650,6 @@ BEGIN
         MENUITEM "&Associations ...",           ID_VIEW_ASSOCIATIONS
         MENUITEM "&Colors ...",                 ID_VIEW_COLORS
         MENUITEM SEPARATOR
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
     POPUP "&Help"
@@ -909,7 +905,7 @@ END
 
 STRINGTABLE
 BEGIN
-    ID_INDICATOR_PROGRESS   "xxxxxxxxxxxxxxx"
+    ID_INDICATOR_PROGRESS   "loading done"
 END
 
 STRINGTABLE
@@ -946,7 +942,6 @@ END
 
 STRINGTABLE
 BEGIN
-    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar\nToggle DirComp"
 END
 

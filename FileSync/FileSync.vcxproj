@@ -59,7 +59,6 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\CDVD;..\..\StackWalker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -166,7 +165,6 @@
     <ClCompile Include="PIDL.cpp" />
     <ClCompile Include="Ping.cpp" />
     <ClCompile Include="PrefDlg.cpp" />
-    <ClCompile Include="ProgBar.cpp" />
     <ClCompile Include="REBProgressDialog.cpp" />
     <ClCompile Include="Storage.cpp" />
     <ClCompile Include="StringDiff.cpp" />
@@ -263,7 +261,6 @@
     <ClInclude Include="PIDL.h" />
     <ClInclude Include="Ping.h" />
     <ClInclude Include="PrefDlg.h" />
-    <ClInclude Include="ProgBar.h" />
     <ClInclude Include="REBProgressDialog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Storage.h" />

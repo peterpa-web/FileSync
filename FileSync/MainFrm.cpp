@@ -52,7 +52,6 @@ const int nStatusProgress = 1;
 CMainFrame::CMainFrame()
 {
 	m_nToolbarID = 0;
-//	m_pViewDir = NULL;
 	m_bIndicatorLeft = FALSE;
 	m_bIndicatorRight = FALSE;
 	m_bActive = TRUE;
@@ -77,15 +76,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-//	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
-//		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
-//		CRect(), IDR_VIEWDIR) ||
-//		!m_wndToolBar.LoadToolBar(IDR_VIEWDIR))
-//	{
-//		TRACE0("Failed to create toolbar\n");
-//		return -1;      // fail to create
-//	}
-
 	if (!m_wndToolBarSearch.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
 		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
 		CRect(), IDR_TOOL_SEARCH) ||
@@ -95,6 +85,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // fail to create
 	}
 
+	m_wndToolBarSearch.EnableDocking(CBRS_ALIGN_ANY);
+	EnableDocking(CBRS_ALIGN_ANY);
+	SwitchToolBar(IDR_VIEWDIR);
+
 	if (!m_wndStatusBar.Create(this) ||
 		!m_wndStatusBar.SetIndicators(indicators,
 		  sizeof(indicators)/sizeof(UINT)))
@@ -102,15 +96,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
-	m_wndStatusBar.SetPaneWidth (nStatusProgress, 80);
-
-	// TODO: Delete these three lines if you don't want the toolbar to be dockable
-//	m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndToolBarSearch.EnableDocking(CBRS_ALIGN_ANY);
-	EnableDocking(CBRS_ALIGN_ANY);
-//	DockPane(&m_wndToolBarSearch);
-//	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
-	SwitchToolBar(IDR_VIEWDIR);
+	m_wndStatusBar.SetPaneWidth (nStatusProgress, 200);
 
 	m_progressMan.Init( GetSafeHwnd() );
 	m_progressMan.SetVisible( FALSE );
@@ -193,11 +179,6 @@ BOOL CMainFrame::OnIdle(LONG lCount)
 	{
 		int nToolbarID = ((CViewFileSync*)pView)->GetCurrToolbarID();
 		SwitchToolBar(nToolbarID);
-//		m_wndToolBar.LoadBitmap( m_nToolbarID );
-//		m_wndToolBar.Invalidate();
-//		DockPane(&m_wndToolBarSearch);
-//		DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
-
 	}
 	BOOL bIdle = ((CViewFileSync*)pView)->OnIdle( lCount );
 	return bIdle;
@@ -213,7 +194,9 @@ BOOL CMainFrame::UpdateMessageText( const CString &strMsg, int nProgress /* = 0 
 		m_wndStatusBar.SetPaneProgress(nStatusProgress, nProgress);
 	}
 	else
+	{
 		m_wndStatusBar.EnablePaneProgressBar(nStatusProgress, -1);
+	}
 
 	m_strMsg = strMsg;
 	SetMessageText( m_strMsg );
@@ -351,11 +334,8 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 		pViewNewFS->Show(TRUE);
 	}
 	TRACE0( "CMainFrame::SetActiveView LoadToolBar & Menue\n" );
-//	VERIFY( m_wndToolBar.LoadToolBar( pViewNewFS->GetMenueID() ) );
 	RecalcLayout( TRUE );
 	SwitchToolBar(pViewNewFS->GetMenueID());
-//	DockPane(&m_wndToolBarSearch);
-//	DockPaneLeftOf(&m_wndToolBar, &m_wndToolBarSearch);
 
 	SetMenu( pViewNewFS->GetMenu() );
 	HICON hBigIcon = GetIcon(TRUE);
@@ -371,17 +351,6 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 	RecalcLayout();
 }
 
-//void CMainFrame::OnUpdateViewDircomp(CCmdUI *pCmdUI)
-//{
-//	pCmdUI->SetCheck((m_pDirCompFrmWnd->GetStyle() & WS_VISIBLE) != 0);
-//}
-
-//void CMainFrame::OnViewDircomp()
-//{
-//	ASSERT( m_pViewDir != NULL );
-//	SetActiveView( m_pViewDir );
-//}
-
 void CMainFrame::OnDestroy()
 {
 	CFrameWndEx::OnDestroy();
@@ -395,21 +364,6 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle , CWnd* pParen
 		return CFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
 
 	// TODO: create new view
-/*
-	TRACE1( "CMainFrame::LoadFrame() view %s\n", pContext->m_pNewViewClass->m_lpszClassName );
-	CViewFileSync *pView = (CViewFileSync*) CreateView( pContext );
-	//  pContext->m_pNewViewClass->CreateObject();
-	//CDocTemplFileSync *pDocTempl = (CDocTemplFileSync *)pContext->m_pNewDocTemplate;
-	//if (!pView->Create(NULL, NULL, WS_CHILD,
-	//	CRect(0, 0, 0, 0), this, pDocTempl->GetResourceID(), pContext))
-	if ( pView == NULL )
-	{
-		TRACE0("Failed to create view\n");
-		return FALSE;
-	}
-	SetActiveView( pView );
-
-	*/
 	return TRUE;
 }
 
@@ -420,48 +374,6 @@ void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 
 	CFrameWndEx::OnGetMinMaxInfo(lpMMI);
 }
-
-//void CMainFrame::OnUpdateIndicator(CCmdUI* pCmdUI)
-//{
-//	BOOL b;
-//	switch (pCmdUI->m_nID)
-//	{
-//	case ID_INDICATOR_LEFT:
-//		b = m_bIndicatorLeft;
-//		break;
-
-//	case ID_INDICATOR_RIGHT:
-//		b = m_bIndicatorRight;
-//		break;
-
-///	default:
-//		TRACE1( "Warning: OnUpdateIndicator - unknown indicator 0x%04X.\n",
-//			pCmdUI->m_nID);
-//		pCmdUI->ContinueRouting();
-//		return; // not for us
-//	}
-
-//	pCmdUI->Enable(b);
-//	ASSERT(pCmdUI->m_bEnableChanged);
-//}
-
-//void CMainFrame::SetIndicator( int nId, BOOL b )
-//{
-//	if ( nId == ID_INDICATOR_LEFT )
-//		m_bIndicatorLeft = b;
-
-//	else if ( nId == ID_INDICATOR_RIGHT )
-//		m_bIndicatorRight = b;
-//}
-
-//BOOL CMainFrame::GetIndicator( int nId )
-//{
-//	if ( nId == ID_INDICATOR_LEFT )
-//		return m_bIndicatorLeft;
-
-//	return m_bIndicatorRight;
-//}
-
 
 
 void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)

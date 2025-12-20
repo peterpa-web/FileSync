@@ -6,7 +6,6 @@
 #include "ToolBarFixed.h"
 #include "ToolBarSearch.h"
 #include "REBProgressDialog.h"
-#include "ProgBar.h"
 
 //class CDirCompFrmWnd;
 class CViewFileSync;
@@ -29,7 +28,6 @@ public:
 	CString GetSearchText() { return m_wndToolBarSearch.GetSearchText(); }
 	BOOL UpdateMessageText( const CString &strMsg, int nProgress = 0 );
 	BOOL IsAppActive() { return m_bActive; }
-//	CMFCToolBar& GetToolBar() { return m_wndToolBar; }
 	CToolBarSearch& GetToolBarSearch() { return m_wndToolBarSearch; }
 	REBProgressManager* GetProgressMan() { return &m_progressMan; }
 	CViewFileSync* GetNewClient() const { return m_pNewClient; }
@@ -58,9 +56,8 @@ public:
 #endif
 
 protected:  // control bar embedded members
-	CProgStatusBar m_wndStatusBar;
+	CMFCStatusBar m_wndStatusBar;
 	CMap<int, int, CToolBarFixed*, CToolBarFixed*&> m_mapToolBarCache;
-//	CToolBarFixed  m_wndToolBar;
 	CToolBarSearch m_wndToolBarSearch;
 	int m_nToolbarID;
 	BOOL m_bIndicatorLeft;
