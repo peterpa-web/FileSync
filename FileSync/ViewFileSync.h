@@ -73,6 +73,7 @@ protected:
 	CBitmap m_bmDirOpen;
 	CBitmap m_bmDirComp;
 	CBitmap m_bmFileComp;
+	int m_nWidthLineNo;
 
 public:
 	virtual void ResetSide() {}

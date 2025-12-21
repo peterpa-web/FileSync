@@ -408,6 +408,8 @@ void CViewFileSync::OnSize(UINT nType, int cx, int cy)
 //		m_buttonsRight[2].SizeToContent();
 	}
 
+	m_nWidthLineNo = 2 * nCxVScroll + 6;
+
 	// path edit
 //	rect.top = 2;
 	rect.top = 0;
