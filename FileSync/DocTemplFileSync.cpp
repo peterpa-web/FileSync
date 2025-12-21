@@ -385,7 +385,7 @@ void CDocTemplFileSync::SetDefaultTitle(CDocument* pDocument)
 	pDocument->SetTitle(strDocName);
 }
 
-CFrameWnd* CDocTemplFileSync::CreateNewFrame(CDocument* pDoc, CFrameWnd* pOther)
+CFrameWndEx* CDocTemplFileSync::CreateNewFrame(CDocument* pDoc, CFrameWndEx* pOther)
 {
 	TRACE1( "CDocTemplFileSync::CreateNewFrame() %s\n", CString(m_pViewClass->m_lpszClassName) );
 	if (pDoc != NULL)
@@ -405,15 +405,14 @@ CFrameWnd* CDocTemplFileSync::CreateNewFrame(CDocument* pDoc, CFrameWnd* pOther)
 		ASSERT(FALSE);
 		return NULL;
 	}
-	CFrameWnd* pFrame = (CFrameWnd*)m_pFrameClass->CreateObject();
-	// CFrameWnd* pFrame = (CFrameWnd*)AfxGetApp()->m_pMainWnd;	// PP
+	CFrameWndEx* pFrame = (CFrameWndEx*)m_pFrameClass->CreateObject();
 	if (pFrame == NULL)
 	{
 		TRACE1("Warning: Dynamic create of frame %hs failed.\n",
 			m_pFrameClass->m_lpszClassName);
 		return NULL;
 	}
-	ASSERT_KINDOF(CFrameWnd, pFrame);
+	ASSERT_KINDOF(CFrameWndEx, pFrame);
 
 	if (context.m_pNewViewClass == NULL)
 	{

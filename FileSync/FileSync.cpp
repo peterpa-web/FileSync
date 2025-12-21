@@ -74,14 +74,15 @@ BOOL CFileSyncApp::InitInstance()
 	SetRegistryKey(_T("Peter Pagel"));
 #endif
 
-	TCHAR szFullPath[510];
-	GetModuleFileName( NULL, szFullPath, sizeof(szFullPath) );
-	TCHAR *pc = _tcsrchr(szFullPath, '\\');
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-	_tcscpy(pc + 1, _T("html"));
-#pragma warning( pop ) 
-	m_strHelpPath = GetProfileString(_T("Help"), _T("Path"), szFullPath);
+	WCHAR szFullPath[512];
+	GetModuleFileNameW( NULL, szFullPath, sizeof(szFullPath) );
+	CString strFullPath = szFullPath;
+	int p = strFullPath.ReverseFind('\\');
+	m_strHelpPath = strFullPath.Left(p + 1);
+	if (m_strHelpPath.Right(7) == L"\\Debug\\")
+		m_strHelpPath = m_strHelpPath.Left(m_strHelpPath.GetLength() - 6) + L"FileSync\\";
+	m_strHelpPath += L"html";
+//	m_strHelpPath = GetProfileString(_T("Help"), _T("Path"), m_strHelpPath);
 
 	m_pDocManager = new CDocManFileSync();
 	CDocTemplFileSync* pDocTemplate;

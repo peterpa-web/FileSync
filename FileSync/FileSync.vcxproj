@@ -59,7 +59,6 @@
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\CDVD;..\..\StackWalker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -128,7 +127,6 @@
     <ClCompile Include="ChangeNotification.cpp" />
     <ClCompile Include="ColorsDlg.cpp" />
     <ClCompile Include="ComboBoxDir.cpp" />
-    <ClCompile Include="ComboSearch.cpp" />
     <ClCompile Include="ConvertUTF.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -167,7 +165,6 @@
     <ClCompile Include="PIDL.cpp" />
     <ClCompile Include="Ping.cpp" />
     <ClCompile Include="PrefDlg.cpp" />
-    <ClCompile Include="ProgBar.cpp" />
     <ClCompile Include="REBProgressDialog.cpp" />
     <ClCompile Include="Storage.cpp" />
     <ClCompile Include="StringDiff.cpp" />
@@ -229,7 +226,6 @@
     <ClInclude Include="ChangeNotification.h" />
     <ClInclude Include="ColorsDlg.h" />
     <ClInclude Include="ComboBoxDir.h" />
-    <ClInclude Include="ComboSearch.h" />
     <ClInclude Include="ConvertUTF.h" />
     <ClInclude Include="DialogReplace.h" />
     <ClInclude Include="DirEntry.h" />
@@ -265,7 +261,6 @@
     <ClInclude Include="PIDL.h" />
     <ClInclude Include="Ping.h" />
     <ClInclude Include="PrefDlg.h" />
-    <ClInclude Include="ProgBar.h" />
     <ClInclude Include="REBProgressDialog.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Storage.h" />

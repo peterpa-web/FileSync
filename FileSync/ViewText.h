@@ -29,7 +29,6 @@ protected:
 	} ItemData;
 	typedef CArray<ItemData,ItemData> CItemDataArray;
 	CItemDataArray m_aItemData;
-	int m_nWidthLineNo;
 	int m_nCharOffs;
 	CEditLine *m_pEdit;
 

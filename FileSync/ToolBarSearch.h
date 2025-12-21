@@ -1,7 +1,7 @@
 #pragma once
-#include "ComboSearch.h"
 #include "ToolBarFixed.h"
 
+#define IDX_COMBO 2
 
 // CToolBarSearch
 
@@ -12,13 +12,10 @@ class CToolBarSearch : public CToolBarFixed
 public:
 	CToolBarSearch();
 	virtual ~CToolBarSearch();
+	void Reset();
 
-	BOOL CreateExtra();
-	CString GetSearchText() { return m_comboSearch.GetSearchText(); }
-
-protected:
-	CFont gSmallFont;
-	CComboSearch m_comboSearch;
+	CMFCToolBarComboBoxButton* GetCombo() { return  DYNAMIC_DOWNCAST(CMFCToolBarComboBoxButton, GetButton(IDX_COMBO)); }
+	LPCTSTR GetSearchText() { return GetCombo()->GetText(); }
 
 protected:
 	DECLARE_MESSAGE_MAP()

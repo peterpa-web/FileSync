@@ -67,7 +67,7 @@ void CDualListBox::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 
 	CSize   sz;
 	CDC*    pDC = GetDC();
-	sz = pDC->GetTextExtent(_T("Tg"));
+	sz = pDC->GetTextExtent(_T("Äg"));
 	ReleaseDC(pDC);
 	m_nItemHeight = sz.cy;
 	m_nCharWidth = sz.cx / 2;

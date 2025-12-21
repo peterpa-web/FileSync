@@ -24,7 +24,7 @@ CViewText::CViewText(void)
 	m_nToolbarID[0] = IDR_VIEWTEXT;
 	m_nToolbarID[1] = IDR_VIEWTEXT_R;
 
-	m_nWidthLineNo = 42;
+//	m_nWidthLineNo = 42;
 	m_nCharOffs = 0;
 	m_pEdit = NULL;
 

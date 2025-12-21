@@ -96,7 +96,7 @@ BEGIN_MESSAGE_MAP(CViewDir, CViewFileSync)
 	ON_UPDATE_COMMAND_UI(ID_DIR_EXPANDPARTIAL, OnUpdateDirExpandpartial)
 	ON_COMMAND(ID_DIR_EXPANDPARTIAL, OnDirExpandpartial)
 	ON_COMMAND(ID_DIR_SETEQUAL, OnDirSetequal)
-	ON_COMMAND(IDC_SEARCH_C, OnSearch)
+	ON_COMMAND(IDC_SEARCH_C, OnSearch)		// IDC_SEARCH_C
 	ON_COMMAND(ID_SEARCH_B, OnSearchB)
 	ON_COMMAND(ID_SEARCH_F, OnSearchF)
 	ON_UPDATE_COMMAND_UI(ID_DIR_SELECTDIFFS, &CViewDir::OnUpdateDirSelectdiffs)
@@ -2197,6 +2197,10 @@ void CViewDir::OnDirSetequal()
 
 void CViewDir::OnSearch()
 {
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	CMFCToolBarComboBoxButton* pCombo = pFrame->GetToolBarSearch().GetCombo();
+	CString strT = pCombo->GetText();
+	pCombo->AddItem(strT);
 	OnSearchF();
 }
 

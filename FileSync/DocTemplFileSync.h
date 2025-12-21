@@ -32,7 +32,7 @@ public:
 	virtual CDocument* OpenDocumentFile( LPCTSTR lpszPathName, BOOL bAddToMRU, BOOL bMakeVisible, 
 										 LPPROGRESS_ROUTINE lpProgressRoutine, LPVOID lpData );
 	virtual void SetDefaultTitle(CDocument* pDocument);
-	virtual CFrameWnd* CreateNewFrame(CDocument* pDoc, CFrameWnd* pOther);
+	virtual CFrameWndEx* CreateNewFrame(CDocument* pDoc, CFrameWndEx* pOther);
 
 //	void AddExtension( const char *pszExt ) { m_astrExt.Add( pszExt ); }
 //	CRuntimeClass* GetViewClass() { return m_pViewClass; }

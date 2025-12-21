@@ -17,9 +17,9 @@
 
 // CMainFrame
 
-IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
+IMPLEMENT_DYNCREATE(CMainFrame, CFrameWndEx)
 
-BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
+BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
 	ON_WM_CLOSE()
@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 //	ON_UPDATE_COMMAND_UI(ID_INDICATOR_RIGHT, OnUpdateIndicator)
 	ON_WM_ACTIVATEAPP()
 	ON_WM_SIZE()
+	ON_REGISTERED_MESSAGE(AFX_WM_RESETTOOLBAR, OnToolbarReset)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -51,7 +52,6 @@ const int nStatusProgress = 1;
 CMainFrame::CMainFrame()
 {
 	m_nToolbarID = 0;
-//	m_pViewDir = NULL;
 	m_bIndicatorLeft = FALSE;
 	m_bIndicatorRight = FALSE;
 	m_bActive = TRUE;
@@ -60,32 +60,34 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 	AfxGetApp()->m_pMainWnd = NULL;
+
+	POSITION pos = m_mapToolBarCache.GetStartPosition();
+	while (pos != NULL)
+	{
+		int n;
+		CToolBarFixed* pToolBar;
+		m_mapToolBarCache.GetNextAssoc(pos, n, pToolBar);
+		delete pToolBar;
+	}
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
+	if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	if (!m_wndToolBar.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
-		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
-//		!m_wndToolBar.LoadToolBar(IDR_MAINFRAME))	// pContext->m_pNewDocTemplate->m_nIDResource ?????
-		!m_wndToolBar.LoadToolBar(IDR_VIEWDIR))
-	{
-		TRACE0("Failed to create toolbar\n");
-		return -1;      // fail to create
-	}
-
 	if (!m_wndToolBarSearch.CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
-		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
+		| /*CBRS_GRIPPER |*/ CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,
+		CRect(), IDR_TOOL_SEARCH) ||
 		!m_wndToolBarSearch.LoadToolBar(IDR_TOOL_SEARCH))
 	{
 		TRACE0("Failed to create search toolbar\n");
 		return -1;      // fail to create
 	}
 
-	if (!m_wndToolBarSearch.CreateExtra())
-		return -1;
+	m_wndToolBarSearch.EnableDocking(CBRS_ALIGN_ANY);
+	EnableDocking(CBRS_ALIGN_ANY);
+	SwitchToolBar(IDR_VIEWDIR);
 
 	if (!m_wndStatusBar.Create(this) ||
 		!m_wndStatusBar.SetIndicators(indicators,
@@ -94,14 +96,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		TRACE0("Failed to create status bar\n");
 		return -1;      // fail to create
 	}
-	m_wndStatusBar.SetPaneWidth (nStatusProgress, 80);
-
-	// TODO: Delete these three lines if you don't want the toolbar to be dockable
-	m_wndToolBar.EnableDocking(CBRS_ALIGN_TOP);
-	m_wndToolBarSearch.EnableDocking(CBRS_ALIGN_TOP);
-	EnableDocking(CBRS_ALIGN_TOP);
-	DockControlBar(&m_wndToolBar);
-	DockControlBar(&m_wndToolBarSearch);
+	m_wndStatusBar.SetPaneWidth (nStatusProgress, 200);
 
 	m_progressMan.Init( GetSafeHwnd() );
 	m_progressMan.SetVisible( FALSE );
@@ -125,7 +120,7 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT, CCreateContext* pContext)
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-	if( !CFrameWnd::PreCreateWindow(cs) )
+	if( !CFrameWndEx::PreCreateWindow(cs) )
 		return FALSE;
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
@@ -142,12 +137,12 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 #ifdef _DEBUG
 void CMainFrame::AssertValid() const
 {
-	CFrameWnd::AssertValid();
+	CFrameWndEx::AssertValid();
 }
 
 void CMainFrame::Dump(CDumpContext& dc) const
 {
-	CFrameWnd::Dump(dc);
+	CFrameWndEx::Dump(dc);
 }
 
 #endif //_DEBUG
@@ -171,7 +166,7 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 		return TRUE;
 
 	// otherwise, do default handling
-	return CFrameWnd::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+	return CFrameWndEx::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
 }
 
 BOOL CMainFrame::OnIdle(LONG lCount)
@@ -182,18 +177,11 @@ BOOL CMainFrame::OnIdle(LONG lCount)
 		return FALSE;
 	if ( ((CViewFileSync*)pView)->GetCurrToolbarID() != m_nToolbarID )
 	{
-		m_nToolbarID = ((CViewFileSync*)pView)->GetCurrToolbarID();
-		m_wndToolBar.LoadBitmap( m_nToolbarID );
-		m_wndToolBar.Invalidate();
-//		m_wndToolBar.OnUpdateCmdUI(this, TRUE);  // OnIdleUpdateCmdUI(1,0);
+		int nToolbarID = ((CViewFileSync*)pView)->GetCurrToolbarID();
+		SwitchToolBar(nToolbarID);
 	}
 	BOOL bIdle = ((CViewFileSync*)pView)->OnIdle( lCount );
-//	if (bIdle && lCount==5)
-//		SetMessageText(_T("Busy"));
-//	if (!bIdle)
-//		SetMessageText(_T("Ready"));
 	return bIdle;
-//	return FALSE;
 }
 
 BOOL CMainFrame::UpdateMessageText( const CString &strMsg, int nProgress /* = 0 */ )
@@ -206,7 +194,9 @@ BOOL CMainFrame::UpdateMessageText( const CString &strMsg, int nProgress /* = 0 
 		m_wndStatusBar.SetPaneProgress(nStatusProgress, nProgress);
 	}
 	else
+	{
 		m_wndStatusBar.EnablePaneProgressBar(nStatusProgress, -1);
+	}
 
 	m_strMsg = strMsg;
 	SetMessageText( m_strMsg );
@@ -240,8 +230,8 @@ void CMainFrame::OnClose()
 			return;
 		pDirView->DeleteContents();
 	}
-	TRACE0("call CFrameWnd::OnClose\n");
-	CFrameWnd::OnClose();
+	TRACE0("call CFrameWndEx::OnClose\n");
+	CFrameWndEx::OnClose();
 }
 
 void CMainFrame::SaveWinPos()
@@ -270,6 +260,34 @@ void CMainFrame::SaveWinPos()
 			RegCloseKey(hSecKey);
 		}
 	}
+}
+
+void CMainFrame::SwitchToolBar(int nToolbarID)
+{
+	if (nToolbarID == m_nToolbarID)
+		return;
+
+	if (m_nToolbarID != 0)
+	{
+		CToolBarFixed* pOldToolBar;
+		if (m_mapToolBarCache.Lookup(m_nToolbarID, pOldToolBar))
+			pOldToolBar->ShowWindow(SW_HIDE);
+	}
+	CToolBarFixed* pToolBar = nullptr;
+	if (m_mapToolBarCache.Lookup(nToolbarID, pToolBar))
+		pToolBar->ShowWindow(SW_SHOW);
+	else
+	{
+		pToolBar = new CToolBarFixed;
+		VERIFY(pToolBar->CreateEx(this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
+			| CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC, CRect(), nToolbarID));
+		VERIFY(pToolBar->LoadToolBar(nToolbarID));
+		m_mapToolBarCache.SetAt(nToolbarID, pToolBar);
+		pToolBar->EnableDocking(CBRS_ALIGN_ANY);
+	}
+	DockPane(&m_wndToolBarSearch);
+	DockPaneLeftOf(pToolBar, &m_wndToolBarSearch);
+	m_nToolbarID = nToolbarID;
 }
 
 BOOL CMainFrame::RestoreWinPos()
@@ -316,17 +334,8 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 		pViewNewFS->Show(TRUE);
 	}
 	TRACE0( "CMainFrame::SetActiveView LoadToolBar & Menue\n" );
-//	m_pViewActive = pViewNew;
-	VERIFY( m_wndToolBar.LoadToolBar( pViewNewFS->GetMenueID() ) );
-//	VERIFY( LoadAccelTable( MAKEINTRESOURCE( pViewNewFS->GetMenueID() ) ) );	// see LoadFrame()
 	RecalcLayout( TRUE );
-	CRect rect;
-	m_wndToolBar.GetWindowRect(rect);
-	CRect rectS;
-	m_wndToolBarSearch.GetWindowRect(rectS);
-	rectS.MoveToY(rect.top);
-	rectS.MoveToX(rect.right);
-	DockControlBar(&m_wndToolBarSearch, AFX_IDW_DOCKBAR_TOP, rectS);
+	SwitchToolBar(pViewNewFS->GetMenueID());
 
 	SetMenu( pViewNewFS->GetMenu() );
 	HICON hBigIcon = GetIcon(TRUE);
@@ -338,24 +347,13 @@ void CMainFrame::SetActiveView( CView *pViewNew, BOOL bNotify /* = TRUE */ )
 	CString strTitle;
 	strTitle.LoadString( pViewNewFS->GetTitleID() );
 	SetWindowText( strTitle );
-	CFrameWnd::SetActiveView( pViewNew );
+	CFrameWndEx::SetActiveView( pViewNew );
 	RecalcLayout();
 }
 
-//void CMainFrame::OnUpdateViewDircomp(CCmdUI *pCmdUI)
-//{
-//	pCmdUI->SetCheck((m_pDirCompFrmWnd->GetStyle() & WS_VISIBLE) != 0);
-//}
-
-//void CMainFrame::OnViewDircomp()
-//{
-//	ASSERT( m_pViewDir != NULL );
-//	SetActiveView( m_pViewDir );
-//}
-
 void CMainFrame::OnDestroy()
 {
-	CFrameWnd::OnDestroy();
+	CFrameWndEx::OnDestroy();
 
 	// TODO: Add your message handler code here
 }
@@ -363,24 +361,9 @@ void CMainFrame::OnDestroy()
 BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle , CWnd* pParentWnd , CCreateContext* pContext)
 {
 	if ( (dwDefaultStyle & WS_OVERLAPPEDWINDOW) == WS_OVERLAPPEDWINDOW )
-		return CFrameWnd::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
+		return CFrameWndEx::LoadFrame(nIDResource, dwDefaultStyle, pParentWnd, pContext);
 
 	// TODO: create new view
-/*
-	TRACE1( "CMainFrame::LoadFrame() view %s\n", pContext->m_pNewViewClass->m_lpszClassName );
-	CViewFileSync *pView = (CViewFileSync*) CreateView( pContext );
-	//  pContext->m_pNewViewClass->CreateObject();
-	//CDocTemplFileSync *pDocTempl = (CDocTemplFileSync *)pContext->m_pNewDocTemplate;
-	//if (!pView->Create(NULL, NULL, WS_CHILD,
-	//	CRect(0, 0, 0, 0), this, pDocTempl->GetResourceID(), pContext))
-	if ( pView == NULL )
-	{
-		TRACE0("Failed to create view\n");
-		return FALSE;
-	}
-	SetActiveView( pView );
-
-	*/
 	return TRUE;
 }
 
@@ -389,55 +372,13 @@ void CMainFrame::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	POINT ptMinTrackSize = { 500, 200 };
 	lpMMI->ptMinTrackSize = ptMinTrackSize;
 
-	CFrameWnd::OnGetMinMaxInfo(lpMMI);
+	CFrameWndEx::OnGetMinMaxInfo(lpMMI);
 }
-
-//void CMainFrame::OnUpdateIndicator(CCmdUI* pCmdUI)
-//{
-//	BOOL b;
-//	switch (pCmdUI->m_nID)
-//	{
-//	case ID_INDICATOR_LEFT:
-//		b = m_bIndicatorLeft;
-//		break;
-
-//	case ID_INDICATOR_RIGHT:
-//		b = m_bIndicatorRight;
-//		break;
-
-///	default:
-//		TRACE1( "Warning: OnUpdateIndicator - unknown indicator 0x%04X.\n",
-//			pCmdUI->m_nID);
-//		pCmdUI->ContinueRouting();
-//		return; // not for us
-//	}
-
-//	pCmdUI->Enable(b);
-//	ASSERT(pCmdUI->m_bEnableChanged);
-//}
-
-//void CMainFrame::SetIndicator( int nId, BOOL b )
-//{
-//	if ( nId == ID_INDICATOR_LEFT )
-//		m_bIndicatorLeft = b;
-
-//	else if ( nId == ID_INDICATOR_RIGHT )
-//		m_bIndicatorRight = b;
-//}
-
-//BOOL CMainFrame::GetIndicator( int nId )
-//{
-//	if ( nId == ID_INDICATOR_LEFT )
-//		return m_bIndicatorLeft;
-
-//	return m_bIndicatorRight;
-//}
-
 
 
 void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 {
-	CFrameWnd::OnActivateApp(bActive, dwThreadID);
+	CFrameWndEx::OnActivateApp(bActive, dwThreadID);
 
 	m_bActive = bActive;
 	CViewFileSync *pView = (CViewFileSync*)GetActiveView();
@@ -445,3 +386,12 @@ void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 		pView->OnDeactivateApp();
 }
 
+LRESULT CMainFrame::OnToolbarReset(WPARAM wparm, LPARAM)
+{
+	UINT uitoolbarid = (UINT)wparm;
+	if (uitoolbarid == IDR_TOOL_SEARCH) {
+		m_wndToolBarSearch.Reset();
+	}
+
+	return 0;
+}

@@ -8,26 +8,7 @@
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 #endif
 
-// Modify the following defines if you have to target a platform prior to the ones specified below.
-// Refer to MSDN for the latest info on corresponding values for different platforms.
-#ifndef WINVER				// Allow use of features specific to Windows 95 and Windows NT 4 or later.
-#define WINVER 0x0600		// Ändern Sie den entsprechenden Wert, um auf Windows 98 und mindestens Windows 2000 abzuzielen.
-#endif
-
-#ifndef _WIN32_WINNT		// Allow use of features specific to Windows NT 4 or later.
-#define _WIN32_WINNT 0x0600		// Ändern Sie den entsprechenden Wert, um auf Windows 98 und mindestens Windows 2000 abzuzielen.
-#endif						
-
-#ifndef _WIN32_WINDOWS		// Allow use of features specific to Windows 98 or later.
-#define _WIN32_WINDOWS 0x0600 // Ändern Sie den entsprechenden Wert, um auf mindestens Windows Me abzuzielen.
-#endif
-
-#ifndef _WIN32_IE			// Allow use of features specific to IE 4.0 or later.
-#define _WIN32_IE 0x0600	// Ändern Sie den entsprechenden Wert, um auf mindestens IE 5.0 abzuzielen.
-#endif
-
-#define WIN32_LEAN_AND_MEAN		// Selten verwendete Teile der Windows-Header nicht einbinden
-#define _ZIP_IMPL_MFC	// for ZipArchive
+#include "targetver.h"
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
@@ -46,6 +27,9 @@
 #include <afxcview.h>
 #include <afxdisp.h>
 #include <afxdlgs.h>
+#include <afxcontrolbars.h>     // MFC-UnterstÃ¼tzung fÃ¼r MenÃ¼bÃ¤nder und Steuerleisten
+
+#define _ZIP_IMPL_MFC	// for ZipArchive
 
 // #include "ThreadTrace.h"
 #include "Storage.h"

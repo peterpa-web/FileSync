@@ -30,9 +30,6 @@
     <ClCompile Include="ComboBoxDir.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ComboSearch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ConvertUTF.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -252,9 +249,6 @@
     <ClCompile Include="DocFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProgBar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DocDirArchive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -273,9 +267,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ComboBoxDir.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ComboSearch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ConvertUTF.h">
@@ -501,9 +492,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DocFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ProgBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DocDirArchive.h">

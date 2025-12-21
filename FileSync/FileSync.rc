@@ -25,21 +25,31 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 //
 
 IDB_OPENDIR             BITMAP                  "res\\bitmapOpenDir.bmp"
+
 IDB_MODE_R              BITMAP                  "res\\mode-R.bmp"
+
 IDB_MODE_RY             BITMAP                  "res\\mode-RY.bmp"
+
 IDB_MODE_GY             BITMAP                  "res\\mode-GY.bmp"
+
 IDB_MODE_G              BITMAP                  "res\\mode-G.bmp"
+
 IDB_MODE_DIS            BITMAP                  "res\\mode_dis.bmp"
+
 IDB_CHECK               BITMAP                  "res\\check.bmp"
+
 IDB_OPENDIR_MENU        BITMAP                  "res\\opendir_men.bmp"
+
 IDB_DIRCOMP             BITMAP                  "res\\dircomp.bmp"
+
 IDB_FILECOMP            BITMAP                  "res\\filecomp.bmp"
+
 #endif    // Neutral resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// German (Germany) resources
+// Deutsch (Deutschland) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
 LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
@@ -51,12 +61,19 @@ LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
 //
 
 IDB_OPEN                BITMAP                  "res\\bitmapOpen.bmp"
+
 IDB_SAVE                BITMAP                  "res\\bitmapSave.bmp"
+
 IDB_SAVE_DIS            BITMAP                  "res\\bitmapSaveDis.bmp"
+
 IDR_VIEWTEXT_R          BITMAP                  "res\\viewtext-r.bmp"
+
 IDR_VIEWDIR_R           BITMAP                  "res\\viewdir-r.bmp"
+
 IDB_TREEIMAGES          BITMAP                  "res\\treeimages.bmp"
+
 IDB_OPEN_MENU           BITMAP                  "res\\openmenu.bmp"
+
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -209,7 +226,7 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,56,29,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,119,29,50,14
     LTEXT           "Are you sure you want to copy/replace the selected files?",IDC_STATIC,35,7,191,14
-	ICON            "",IDC_BIGICON,7,7,32,32
+    ICON            "",IDC_BIGICON,7,7,32,32
 END
 
 IDD_OVERWRITE_NEWER DIALOGEX 0, 0, 235, 58
@@ -222,7 +239,7 @@ BEGIN
     PUSHBUTTON      "Yes",IDOK,7,39,50,14
     LTEXT           "<filename>",IDC_STATIC_TEXT1,35,7,200,14
     LTEXT           "Are you sure you want to overwrite it with an older version?",IDC_STATIC_TEXT2,35,20,200,14
-	ICON            "",IDC_BIGICON,7,7,32,32
+    ICON            "",IDC_BIGICON,7,7,32,32
 END
 
 
@@ -317,28 +334,19 @@ BEGIN
         MENUITEM "Text",                        ID_TYPE_TEXT
         MENUITEM "Xml",                         ID_TYPE_XML
         MENUITEM SEPARATOR
-		MENUITEM "Link pair",					ID_VIEW_LINK
+        MENUITEM "Link pair",                   ID_VIEW_LINK
         MENUITEM "R/W",                         ID_TYPE_RW
         MENUITEM "Open",                        ID_TYPE_OPEN
         MENUITEM "Set Equal",                   ID_DIR_SETEQUAL
     END
 END
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-
-#endif    // German (Germany) resources
+#endif    // Deutsch (Deutschland) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+// Englisch (USA) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -350,9 +358,13 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 IDR_VIEWTEXT            BITMAP                  "res\\viewtext.bmp"
+
 IDR_VIEWDIR             BITMAP                  "res\\viewdir.bmp"
+
 IDR_VIEWHEX             BITMAP                  "res\\viewhex.bmp"
+
 IDR_TOOL_SEARCH         BITMAP                  "res\\tool_search.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -366,7 +378,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
     LTEXT           "FileSync Version ...",IDC_STATIC_VERSION,40,10,119,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2002-2011 Peter Pagel (peter.pagel@wincor-nixdorf.com)\nThis program is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License as published by the Free Software Foundation.",IDC_STATIC,40,25,205,45
+    LTEXT           "Copyright (C) 2002-2025 Peter Pagel (peter.pagel@web.de)\nThis program is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License as published by the Free Software Foundation.",IDC_STATIC,40,25,205,45
     DEFPUSHBUTTON   "OK",IDOK,211,7,50,16,WS_GROUP
     LTEXT           "Please see the file License.txt",IDC_STATIC,40,73,201,12
 END
@@ -414,7 +426,7 @@ BEGIN
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
     VK_F5,          ID_VIEW_REFRESH,        VIRTKEY, NOINVERT
     VK_F1,          ID_HELP_CONTEXT,        VIRTKEY, NOINVERT
-	VK_F3,			ID_SEARCH_F,			VIRTKEY, NOINVERT
+    VK_F3,          ID_SEARCH_F,            VIRTKEY, NOINVERT
 END
 
 IDR_VIEWTEXT ACCELERATORS
@@ -435,7 +447,7 @@ BEGIN
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
     VK_F5,          ID_VIEW_REFRESH,        VIRTKEY, NOINVERT
     VK_F1,          ID_HELP_CONTEXT,        VIRTKEY, NOINVERT
-	VK_F3,			ID_SEARCH_F,			VIRTKEY, NOINVERT
+    VK_F3,          ID_SEARCH_F,            VIRTKEY, NOINVERT
 END
 
 
@@ -474,7 +486,6 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM "&Dir Compare",                ID_VIEW_DIRCOMP
         MENUITEM SEPARATOR
@@ -542,7 +553,6 @@ BEGIN
         MENUITEM "Check Left",                  ID_VIEW_CHECKLEFT
         MENUITEM "Check Right",                 ID_VIEW_CHECKRIGHT
         MENUITEM SEPARATOR
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
     POPUP "&Help"
@@ -581,19 +591,19 @@ BEGIN
     POPUP "&View"
     BEGIN
         MENUITEM "&File synchr",                ID_VIEW_FILESYNC
-		POPUP "&Sort"
-        {
-            MENUITEM "Name",                    ID_SORT_NAME, CHECKED
-            MENUITEM "MKS",                     ID_SORT_MKS
-            MENUITEM "Left Size",               ID_SORT_LEFT_SIZE
-            MENUITEM "Left Size desc",          ID_SORT_LEFT_SIZE_DESC
-            MENUITEM "Left Time",               ID_SORT_LEFT_TIME
-            MENUITEM "Left Time desc",          ID_SORT_LEFT_TIME_DESC
-            MENUITEM "Right Size",              ID_SORT_RIGHT_SIZE
-            MENUITEM "Right Size desc",         ID_SORT_RIGHT_SIZE_DESC
-            MENUITEM "Right Time",              ID_SORT_RIGHT_TIME
-            MENUITEM "Right Time desc",         ID_SORT_RIGHT_TIME_DESC
-        }
+        POPUP "&Sort"
+        BEGIN
+            MENUITEM "Name",                        ID_SORT_NAME, CHECKED
+            MENUITEM "MKS",                         ID_SORT_MKS
+            MENUITEM "Left Size",                   ID_SORT_LEFT_SIZE
+            MENUITEM "Left Size desc",              ID_SORT_LEFT_SIZE_DESC
+            MENUITEM "Left Time",                   ID_SORT_LEFT_TIME
+            MENUITEM "Left Time desc",              ID_SORT_LEFT_TIME_DESC
+            MENUITEM "Right Size",                  ID_SORT_RIGHT_SIZE
+            MENUITEM "Right Size desc",             ID_SORT_RIGHT_SIZE_DESC
+            MENUITEM "Right Time",                  ID_SORT_RIGHT_TIME
+            MENUITEM "Right Time desc",             ID_SORT_RIGHT_TIME_DESC
+        END
         MENUITEM "&Expand all",                 ID_VIEW_INCLUDESUBDIRS
         MENUITEM "Explorer",                    ID_VIEW_EXPLORER
         MENUITEM "&Previous Difference",        ID_VIEW_PREV_DIFF
@@ -602,7 +612,6 @@ BEGIN
         MENUITEM "&Associations ...",           ID_VIEW_ASSOCIATIONS
         MENUITEM "C&olors ...",                 ID_VIEW_COLORS
         MENUITEM SEPARATOR
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "Status &Bar",                 ID_VIEW_STATUS_BAR
         MENUITEM "Project &files",              ID_VIEW_PROJECT
     END
@@ -641,7 +650,6 @@ BEGIN
         MENUITEM "&Associations ...",           ID_VIEW_ASSOCIATIONS
         MENUITEM "&Colors ...",                 ID_VIEW_COLORS
         MENUITEM SEPARATOR
-        MENUITEM "&Toolbar",                    ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
     END
     POPUP "&Help"
@@ -661,7 +669,9 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\FileSync.ico"
+
 IDR_DIRCOMPFRAME        ICON                    "res\\dircomp.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -669,6 +679,29 @@ IDR_DIRCOMPFRAME        ICON                    "res\\dircomp.ico"
 //
 
 IDR_VIEWTEXT TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_VIEW_PREV_DIFF
+    BUTTON      ID_VIEW_NEXT_DIFF
+    SEPARATOR
+    BUTTON      ID_EDIT_UNDO
+    BUTTON      ID_EDIT_REDO
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_EDIT_INSERTBEFORE
+    BUTTON      ID_EDIT_REPLACESEL
+    BUTTON      ID_EDIT_INSERTAFTER
+    BUTTON      ID_EDIT_DEL_LINES
+    SEPARATOR
+    BUTTON      ID_VIEW_REFRESH
+    BUTTON      ID_VIEW_DIRCOMP
+    SEPARATOR
+    BUTTON      ID_HELP_CONTEXT
+END
+
+IDR_VIEWTEXT_R TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_VIEW_PREV_DIFF
     BUTTON      ID_VIEW_NEXT_DIFF
@@ -711,6 +744,26 @@ BEGIN
     BUTTON      ID_HELP_CONTEXT
 END
 
+IDR_VIEWDIR_R TOOLBAR 16, 15
+BEGIN
+    BUTTON      ID_VIEW_PREV_DIFF
+    BUTTON      ID_VIEW_NEXT_DIFF
+    SEPARATOR
+    BUTTON      ID_VIEW_INCLUDESUBDIRS
+    SEPARATOR
+    BUTTON      ID_EDIT_PREV
+    BUTTON      ID_EDIT_NEXT
+    SEPARATOR
+    BUTTON      ID_EDIT_COPY
+    SEPARATOR
+    BUTTON      ID_EDIT_REPLACESEL
+    BUTTON      ID_EDIT_DEL_LINES
+    SEPARATOR
+    BUTTON      ID_VIEW_FILESYNC
+    SEPARATOR
+    BUTTON      ID_HELP_CONTEXT
+END
+
 IDR_VIEWHEX TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_VIEW_PREV_DIFF
@@ -725,7 +778,7 @@ IDR_TOOL_SEARCH TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_SEARCH_B
     SEPARATOR
-    BUTTON      ID_SEARCH_C
+    BUTTON      IDC_SEARCH_C
     SEPARATOR
     BUTTON      ID_SEARCH_F
 END
@@ -737,8 +790,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,1,0,0
- PRODUCTVERSION 2,1,0,0
+ FILEVERSION 2,2,0,0
+ PRODUCTVERSION 2,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -755,12 +808,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Peter Pagel"
             VALUE "FileDescription", "File compare and synchronize utility"
-            VALUE "FileVersion", "2.1.0.0"
+            VALUE "FileVersion", "2.2.0.0"
             VALUE "InternalName", "FileSync.exe"
-            VALUE "LegalCopyright", "Copyright (c) 2002-2011 Peter Pagel.  All rights reserved."
+            VALUE "LegalCopyright", "Copyright (c) 2002-2025 Peter Pagel.  All rights reserved."
             VALUE "OriginalFilename", "FileSync.exe"
             VALUE "ProductName", "FileSync"
-            VALUE "ProductVersion", "2.1.0.0"
+            VALUE "ProductVersion", "2.2.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -780,11 +833,31 @@ BEGIN
     IDR_MAINFRAME           "FileSync"
     IDR_DIRCOMPFRAME        "DirComp"
     ID_VIEW_DIRCOMP         "Show the directory compare window\nDir Compare"
-    ID_VIEW_TEXT            "Show the text compare window\nText Compare"
-    ID_VIEW_XML             "Show the XML compare window\nXML Compare"
-    ID_VIEW_HEX             "Show the binary HEX compare window\nHEX Compare"
     ID_FILE_OPENDIRLEFT     "Open directory in left pane\nOpen Dir left"
     ID_FILE_OPENDIRRIGHT    "Open directory in right pane\nOpen Dir right"
+END
+
+STRINGTABLE
+BEGIN
+    ID_DIR_COLLAPSE         "Collapse selected items\nCollapse"
+    ID_DIR_EXPANDPARTIAL    "Show all different items\nExpand partial"
+    ID_SEARCH_B             "Search backwards\nsearch back"
+    ID_SEARCH_F             "Search forward\nsearch next"
+    ID_DIR_SELECTDIFFS      "Select all different items\nSelect diffs"
+    ID_VIEW_TEXT            "Show the text compare window\nText Compare"
+    ID_FILE_MODELEFT        "Toggle R/W Mode Left\nMode Left"
+    ID_FILE_MODERIGHT       "Toggle R/W Mode Right\nMode Right"
+    ID_VIEW_CHECKLEFT       "Check external change Left\nCheck Left"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_CHECKRIGHT      "Check external change Right\nCheck Right"
+    ID_EDIT_DEL_LINES       "Delete selected lines\nDelete"
+    ID_VIEW_HEX             "Show the binary HEX compare window\nHEX Compare"
+    ID_HELP_CONTENTS        "Show help contents"
+    ID_HELP_CONTEXT         "Show context help\nHelp"
+    ID_VIEW_XML             "Show the XML compare window\nXML Compare"
 END
 
 STRINGTABLE
@@ -793,6 +866,10 @@ BEGIN
     ID_FILE_SAVE_LEFT       "Save to file from left pane\nSave left"
     ID_FILE_OPEN_RIGHT      "Open file in right pane\nOpen right"
     ID_FILE_SAVE_RIGHT      "Save to file from right pane\nSave right"
+END
+
+STRINGTABLE
+BEGIN
     ID_FILE_SAVE_LEFT_AS    "Save to specific file from left pane\nSave left as"
     ID_FILE_SAVE_RIGHT_AS   "Save to specific file from right pane\nSave right as"
 END
@@ -807,6 +884,7 @@ BEGIN
     ID_EDIT_PREF            "Change Preferences\nPreferences"
     ID_EDIT_PREV            "Go to the previous directory\nPrev"
     ID_EDIT_NEXT            "Go to the next directory\nNext"
+    ID_VIEW_EXPLORER        "Open explorer window\nExplore"
 END
 
 STRINGTABLE
@@ -823,9 +901,11 @@ BEGIN
     ID_INDICATOR_SCRL       "SCRL"
     ID_INDICATOR_OVR        "OVR"
     ID_INDICATOR_REC        "REC"
-//    ID_INDICATOR_LEFT       "Left"
-//    ID_INDICATOR_RIGHT      "Right"
-	ID_INDICATOR_PROGRESS   "xxxxxxxxxxxxxxx"
+END
+
+STRINGTABLE
+BEGIN
+    ID_INDICATOR_PROGRESS   "loading done"
 END
 
 STRINGTABLE
@@ -862,7 +942,6 @@ END
 
 STRINGTABLE
 BEGIN
-    ID_VIEW_TOOLBAR         "Show or hide the toolbar\nToggle ToolBar"
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar\nToggle DirComp"
 END
 
@@ -887,10 +966,10 @@ STRINGTABLE
 BEGIN
     ID_VIEW_FILESYNC        "Synchronize files or subdirs\nFile synchr"
     ID_VIEW_REFRESH         "Rebuild display\nRefresh"
+    IDR_VIEWISO             "FileSync ISO"
     ID_VIEW_INCLUDESUBDIRS  "Show all containing items\nExpand all"
     IDR_VIEWTEXT            "FileSync Text"
     IDR_VIEWZIP             "FileSync ZIP"
-    IDR_VIEWISO             "FileSync ISO"
     IDR_VIEWDIR             "FileSync Dir"
 END
 
@@ -919,34 +998,13 @@ END
 
 STRINGTABLE
 BEGIN
-    ID_SEARCH_B             "Search backwards\nsearch back"
-    ID_SEARCH_F             "Search forward\nsearch next (F3)"
-    ID_FILE_MODELEFT        "Toggle R/W Mode Left\nMode Left"
-    ID_FILE_MODERIGHT       "Toggle R/W Mode Right\nMode Right"
-    ID_VIEW_CHECKLEFT       "Check external change Left\nCheck Left"
-END
-
-STRINGTABLE
-BEGIN
     IDC_SEARCH_C            "Enter search text"
 END
 
 STRINGTABLE
 BEGIN
-    ID_VIEW_CHECKRIGHT      "Check external change Right\nCheck Right"
-    ID_EDIT_DEL_LINES       "Delete selected lines\nDelete"
-    ID_HELP_CONTENTS        "Show help contents"
-    ID_HELP_CONTEXT         "Show context help\nHelp"
-END
-
-STRINGTABLE
-BEGIN
-    ID_DIR_EXPANDPARTIAL    "Show all different items\nExpand partial"
-    ID_DIR_COLLAPSE         "Collapse selected items\nCollapse"
     ID_DIR_FREE             "Collapse and free selected items\nFree"
-    ID_DIR_SELECTDIFFS      "Select all different items\nSelect diffs"
-    ID_VIEW_EXPLORER        "Open explorer window\nExplore"
-	ID_VIEW_PROJECT         "Show .pj files\n.pj files"
+    ID_VIEW_PROJECT         "Show .pj files\n.pj files"
 END
 
 STRINGTABLE
@@ -954,12 +1012,12 @@ BEGIN
     IDB_MODE_G              "File mode Read Write\nFile mode RW"
 END
 
-#endif    // English (United States) resources
+#endif    // Englisch (USA) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Neutral (Sys. Default) resources
+// Neutral (Systemstandard) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUSD)
 LANGUAGE LANG_NEUTRAL, SUBLANG_SYS_DEFAULT
@@ -980,13 +1038,13 @@ BEGIN
         MENUITEM "Free",                        ID_DIR_FREE
         MENUITEM "Select diffs",                ID_DIR_SELECTDIFFS
         MENUITEM "R/W",                         ID_TYPE_RW
-		MENUITEM "Link pair",					ID_VIEW_LINK
+        MENUITEM "Link pair",                   ID_VIEW_LINK
         MENUITEM SEPARATOR
         MENUITEM "Explore",                     ID_VIEW_EXPLORER
     END
 END
 
-#endif    // Neutral (Sys. Default) resources
+#endif    // Neutral (Systemstandard) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
