@@ -1,1 +1,1 @@
-Please see FileSync/html/index.htm
+Please see FileSync/html/index.html
