@@ -31,7 +31,7 @@ RequestExecutionLevel admin
 ;--------------------------------
 
 ; Pages
-
+  !define MUI_PAGE_CUSTOMFUNCTION_LEAVE checkRuntime
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -48,6 +48,17 @@ RequestExecutionLevel admin
 
 ;--------------------------------
 
+Function checkRuntime
+  ReadRegStr $1 HKLM "SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x86" "Installed"
+  StrCmp $1 1 RTinstalled
+    MessageBox MB_OK "Visual C++ Redistributable for Visual Studio 2022 (x86) $(requTxt) https://www.microsoft.com/download"
+    Quit
+
+RTinstalled:
+
+FunctionEnd
+
+
 ; The stuff to install
 Section "Application" Section1
 
@@ -61,9 +72,6 @@ Section "Application" Section1
   File "..\FileSync\License.txt"
   File "..\FileSync\gpl.txt"
   File /r "..\FileSync\html"
-  File "${WINSYS32}\mfc100.dll"
-  File "${WINSYS32}\mfc100u.dll"
-  File "${WINSYS32}\msvcr100.dll"
   
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\${MYAPP} "Install_Dir" "$INSTDIR"
@@ -87,43 +95,16 @@ Section "Start Menu Shortcuts" Section2
   
 SectionEnd
 
-; Optional section (can be disabled by the user)
-Section "Sources" Section3
-
-  CreateDirectory "$INSTDIR\sources"
-  SetOutPath $INSTDIR\sources
-  File "..\*.sln"
-  CreateDirectory "$INSTDIR\sources\FileSync"
-  SetOutPath $INSTDIR\sources\FileSync
-  File "..\FileSync\*.h"
-  File "..\FileSync\*.c*"
-  File "..\FileSync\*.rc"
-  File "..\FileSync\*.vcx*"
-  CreateDirectory "$INSTDIR\sources\FileSync\res"
-  SetOutPath $INSTDIR\sources\FileSync\res
-  File "..\FileSync\res\*.*"
-  CreateDirectory "$INSTDIR\sources\CDVD"
-  SetOutPath $INSTDIR\sources\CDVD
-  File "..\CDVD\*.h"
-  File "..\CDVD\*.c*"
-  File "..\CDVD\*.vcx*"
-  CreateDirectory "$INSTDIR\sources\CDVD\IsoFS"
-  SetOutPath $INSTDIR\sources\CDVD\IsoFS
-  File "..\CDVD\IsoFS\*.h"
-  File "..\CDVD\IsoFS\*.c*"
-  
-SectionEnd
 
 ;--------------------------------
 ;Descriptions
   LangString DESC_Section1 ${LANG_ENGLISH} "Application installation files."
   LangString DESC_Section2 ${LANG_ENGLISH} "Optional start menu shortcut."
-  LangString DESC_Section3 ${LANG_ENGLISH} "Optional application sources."
+  LangString requTxt ${LANG_ENGLISH} "is required,$\nplease see"
 
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${Section1} $(DESC_Section1)
     !insertmacro MUI_DESCRIPTION_TEXT ${Section2} $(DESC_Section2)
-    !insertmacro MUI_DESCRIPTION_TEXT ${Section3} $(DESC_Section3)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 

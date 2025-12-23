@@ -1,4 +1,4 @@
-// DualListBox.cpp : implementation file
+﻿// DualListBox.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -67,10 +67,11 @@ void CDualListBox::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 
 	CSize   sz;
 	CDC*    pDC = GetDC();
-	sz = pDC->GetTextExtent(_T("�g"));
+	sz = pDC->GetTextExtent(_T("Äg"));
 	ReleaseDC(pDC);
 	m_nItemHeight = sz.cy;
 	m_nCharWidth = sz.cx / 2;
+	ASSERT(m_nCharWidth < m_nItemHeight);
 	lpMeasureItemStruct->itemHeight = m_nItemHeight;
 }
 

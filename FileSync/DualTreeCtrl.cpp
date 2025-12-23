@@ -1,4 +1,4 @@
-// DualTreeCtrl.cpp : implementation file
+﻿// DualTreeCtrl.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -85,7 +85,7 @@ void CDualTreeCtrl::MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
 	if ( m_nCharWidth == 5 ) {		// init
 		CSize   sz;
 		CDC*    pDC = GetDC();
-		sz = pDC->GetTextExtent(_T("Tg"));
+		sz = pDC->GetTextExtent(_T("Äg"));
 		ReleaseDC(pDC);
 		m_nItemHeight = sz.cy;
 		m_nCharWidth = (sz.cx+2) / 2 + 1;
