@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /Release Unicode MFC MD/ZipArchive.lib
 /Debug Unicode MFC MD/ZipArchive.idb
 /Debug Unicode MFC MD/ZipArchive.lib
+/Release MFC MD/ZipArchive.lib
