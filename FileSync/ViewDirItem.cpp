@@ -550,6 +550,12 @@ void CViewDirItem::DrawTreeItemSide(CDC* pDC, CDualTreeCtrl &tree, HTREEITEM hIt
 		lplvcd->clrText = ::GetSysColor(COLOR_WINDOWTEXT);
 		pDC->FillSolidRect(&lplvcd->nmcd.rc, tree.GetMarkSingleColor() );
 		lplvcd->clrTextBk = tree.GetMarkSingleColor();
+		if (nSide == common && IsPresent(right))
+		{
+			CRect rc = lplvcd->nmcd.rc;
+			rc.right = rc.left + 2 * rc.Height();
+			pDC->FillSolidRect(&rc, tree.GetMarkLiteColor());
+		}
 	}
 	else
 	{

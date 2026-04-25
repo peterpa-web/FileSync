@@ -35,6 +35,7 @@ CViewDir::CViewDir(void) : m_tree( m_treeData )
 	m_nCharOffs = 0;
 	m_bUndoEnabled = TRUE;
 	m_pTask = NULL;
+	m_bSingleLine = FALSE;
 	m_bInvalidate = FALSE;
 	m_nSortType = ID_SORT_NAME;
 }
@@ -1146,8 +1147,78 @@ void CViewDir::OnUpdateEditReplacesel(CCmdUI *pCmdUI)
 	pCmdUI->Enable( bEnable );
 }
 
+CString CViewDir::GetDriveName(const CString& strPath)
+{
+	int p = strPath.Find('\\', 2);
+	if (p < 2)
+		return CString();
+	p = strPath.Find('\\', p + 1);
+	if (p < 2)
+		return CString();
+	return strPath.Left(p);
+}
+
+bool CViewDir::IsSameDrive()
+{
+	CString strLeft = GetDoc(left)->GetPathName();
+	CString strRight = GetDoc(right)->GetPathName();
+	if (strLeft.Left(3) != strRight.Left(3))
+		return false;
+	if (strLeft.Mid(1, 2) == L":\\")
+		return true;
+	return GetDriveName(strLeft) == GetDriveName(strRight);
+}
+
+bool CViewDir::MoveSel()
+{
+	int nSide = s_nSide;
+	CString strSrc = GetDoc(nSide)->GetPathName();
+	if (!IsSameDrive())
+		return false;
+	HTREEITEM hItem = m_tree.GetFirstSel();
+	while (hItem != NULL)
+	{
+		CViewDirItem& d = m_tree.GetItemData(hItem);
+		if (d.IsPresent(nSide) &&
+			d.GetName() != _T(".."))
+		{
+			if (d.IsPresent(1 - nSide))
+				return false;
+		}
+		hItem = m_tree.GetNextSel(hItem);
+	}
+
+	hItem = m_tree.GetFirstSel();
+	while (hItem != NULL)
+	{
+		CViewDirItem& d = m_tree.GetItemData(hItem);
+		if (d.IsPresent(nSide) &&
+			d.GetName() != _T(".."))
+		{
+			CString strSrc = d.GetParentDoc(nSide)->GetPathName() + '\\' + d.GetName();
+			CString strDst = d.GetParentDoc(1 - nSide)->GetPathName() + '\\' + d.GetName();
+			if (!MoveFile(strSrc, strDst))
+			{
+				DWORD dwErr = GetLastError();
+				CString strErr = GetLastErrorText(dwErr);
+				AfxMessageBox(_T("Can't move ") + strSrc + L" - " + strErr, MB_ICONEXCLAMATION);
+				return false;
+			}
+		}
+		hItem = m_tree.GetNextSel(hItem);
+	}
+	return true;
+}
+
 void CViewDir::OnEditReplacesel()
 {
+	bool bCtrl = (GetKeyState(VK_CONTROL) & 0x8000) != 0;
+	if (bCtrl)
+	{
+		if (MoveSel())
+			return;
+	}
+
 	int nSide = s_nSide;
 	CDialogReplace dlg;
 	if ( dlg.DoModal() != IDOK )
@@ -1226,6 +1297,9 @@ void CViewDir::OnEditReplacesel()
 
 //	changeNotify[1-nSide].Enable();
 //	m_tree.Invalidate();
+
+	if (bCtrl)
+		OnEditDelete();
 }
 
 void CViewDir::OnFileOpenRight()
@@ -2620,4 +2694,15 @@ LRESULT CViewDir::OnUserErr(UINT wParam, LONG lParam)
 	else if (wParam == 1)
 		m_comboDirRight.SetWindowText(L"");
 	return 0;
+}
+
+BOOL CViewDir::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message == WM_KEYDOWN && pMsg->wParam == VK_DELETE)
+	{
+		OnEditDelete();
+		return TRUE;
+	}
+
+	return CViewFileSync::PreTranslateMessage(pMsg);
 }

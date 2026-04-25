@@ -43,7 +43,6 @@ protected:
 	CDualTreeDirData m_treeData;
 	CDualTreeDir m_tree;  // ( m_treeData );
 	CThreadBack m_threadBack;
-//	REBProgressManager m_progressMan;
 
 public:
 	CDocDir* GetDoc(int nSide) const { return (CDocDir *)m_pDoc[nSide]; }
@@ -55,9 +54,6 @@ public:
 protected:
 	void InitDocs();
 	void InitDoc( const CString &strPath, int nSide );
-//	void CompareItem( CDocDir::CMerge &merge, CViewDirItem &d, int nComp );
-//	void CompareItem( int nSide, CViewDirItem &d, CDocDir *pDoc, POSITION pos );
-//	void AddItem( const CViewDirItem &d, HTREEITEM hParent = TVI_ROOT );
 	void ClearItemRecursive( HTREEITEM hItem, int nSide );
 	BOOL RemoveItemRecursive( HTREEITEM hItem, int nSide );
 	__int64 CopyItemRecursivePre( HTREEITEM hItem, int nSide );
@@ -72,21 +68,17 @@ protected:
 	void CreateSubItems( HTREEITEM hItem, TREEPOS posTree, CViewDirItem &d );
 	void UpdateParentMark( HTREEITEM hItem );
 	HTREEITEM SearchF( HTREEITEM hItem, const CString &strSearch );
-//	void IdleRequest( int nIdleType ) {
-//		m_nIdleTypeNew = nIdleType;
-	//	TRACE1("CViewDir::IdleRequest(%d)\n", nIdleType);
-//	}
 	void OnFileOpen(int nSide);
 	virtual void OnFileSave( Side s );
 
 	void UpdateHScroll();
 	HGLOBAL SelCopy();
 	CString GetLastErrorText(DWORD dwLastError=0);
+	CString GetDriveName(const CString& strPath);
+	bool IsSameDrive();
+	bool MoveSel();		// OnEditReplacesel with Ctrl
 
 private:
-//	HTREEITEM m_hIdleItem;
-//	int m_nIdleType;
-//	int m_nIdleTypeNew;
 	enum IdleType {
 		UpdateNone,
 		UpdateIcons,
@@ -99,14 +91,12 @@ private:
 		CompareAllDirs,
 		RefreshSide
 	};
-//	int m_nIdleItems;
 	CUndoDir *m_pTask;
 	CMenu m_menuContext;
 	CMenu m_menuContextDir;
 	void OnTreeDblClk(HTREEITEM hItem, int nSide, CDocTemplFileSync* pTemplate);
 	void OnType( UINT nIDResource );
 	BOOL m_bSingleLine;
-//	DWORD m_dwLastIdle;
 	BOOL m_bInvalidate;
 	int m_nSortType;
 
@@ -207,4 +197,5 @@ public:
 	afx_msg void OnViewLink();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint point);
 	afx_msg LRESULT OnUserErr(UINT wParam, LONG lParam);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
