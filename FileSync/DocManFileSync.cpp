@@ -617,3 +617,8 @@ void CDocManFileSync::SetType( CDocTemplFileSync* pTemplate )
 		m_strType = pTemplate->GetTypeString();
 	}
 }
+
+void CDocManFileSync::ResetViewDir()
+{
+	((CDocTemplFileSync*)m_templateList.GetTail())->ResetView();
+}

@@ -206,6 +206,7 @@ BOOL CMainFrame::UpdateMessageText( const CString &strMsg, int nProgress /* = 0 
 
 void CMainFrame::OnClose()
 {
+	TRACE0("OnClose\n");
 	CDocManFileSync* pDM = (CDocManFileSync*)AfxGetApp()->m_pDocManager;
 	CViewFileSync* pDirView = pDM->GetViewDir();
 	CViewFileSync* pView = (CViewFileSync*)GetActiveView();
@@ -232,6 +233,13 @@ void CMainFrame::OnClose()
 	}
 	TRACE0("call CFrameWndEx::OnClose\n");
 	CFrameWndEx::OnClose();
+}
+
+void CMainFrame::OnDelViewDir()
+{
+	m_pViewActive = nullptr;
+	CDocManFileSync* pDM = (CDocManFileSync*)AfxGetApp()->m_pDocManager;
+	pDM->ResetViewDir();
 }
 
 void CMainFrame::SaveWinPos()

@@ -93,6 +93,7 @@ BOOL CUndoDir::DoSide( int nSide, const CString &strPath, CDocTemplFileSync *pDo
 
 	if (!pDocument->OnOpenDocument(strPath, NULL, NULL ))			// TODO: progress
 	{
+		TRACE0("OnOpenDocument failed\n");
 		if ( pDocOld != pDocument )
 		{
 			pDocTemplate->RemoveDocument(pDocument);	// PP 050331

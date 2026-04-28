@@ -25,6 +25,7 @@ public:
 	BOOL IsAnySel() const { return m_bChildSel | m_bSel; } // 20100118
 	BOOL IsChildSel() const { return m_bChildSel; }
 	BOOL IsSel() const { return m_bSel; }
+	BOOL IsSel(BOOL b) const { return b != m_bSel; }
 	void Sel( BOOL b ) { m_bSel = b; }
 	void SetChildSel( BOOL b ) { m_bChildSel = b; }
 //	BOOL IsExpandAll() const { return (m_nExpand & expandAll); }

@@ -43,6 +43,7 @@ protected:
 	CDualTreeDirData m_treeData;
 	CDualTreeDir m_tree;  // ( m_treeData );
 	CThreadBack m_threadBack;
+	CMainFrame* m_pMainWnd = nullptr;
 
 public:
 	CDocDir* GetDoc(int nSide) const { return (CDocDir *)m_pDoc[nSide]; }

@@ -34,12 +34,11 @@ public:
 	virtual void SetDefaultTitle(CDocument* pDocument);
 	virtual CFrameWndEx* CreateNewFrame(CDocument* pDoc, CFrameWndEx* pOther);
 
-//	void AddExtension( const char *pszExt ) { m_astrExt.Add( pszExt ); }
-//	CRuntimeClass* GetViewClass() { return m_pViewClass; }
 	CViewFileSync* GetView() { return m_pView; }
 	void SetView( CViewFileSync* pView ) { m_pView = pView; }
+	void ResetView() { m_pView = nullptr; }
 	UINT GetResourceID() const { return m_nIDResource; }
-	void SetDefault( BOOL b = TRUE ) { m_bDefault = b; };
+	void SetDefault( BOOL b = TRUE ) { m_bDefault = b; }
 	void SetIconNo( int nIcon ) { m_nIcon = nIcon; }
 	int GetIconNo() const { return m_nIcon; }
 	void GetProfile( LPCTSTR pszSection, LPCSTR pszDefault );

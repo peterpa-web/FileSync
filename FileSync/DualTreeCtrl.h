@@ -34,13 +34,11 @@ public:
 	int GetCharWidth() const { return m_nCharWidth; }
 	void UpdCharsLeft( int nChars );
 	void UpdCharsRight( int nChars );
-//	void UpdChars( int nSide, int nChars ) { ( nSide == 0 ? UpdCharsLeft(nChars) : UpdCharsRight(nChars) ); }
 	int GetOffsLeft() const { return m_nOffsLeft; }
 	int GetOffsRight() const { return m_nOffsRight; }
 	void EnableDraw( BOOL b ) { m_bEnableDraw = b; }
 	BOOL IsEnabledDraw() { return m_bEnableDraw; }
 	void EnableClick( BOOL b ) { m_bEnableClick = b; }
-//	BOOL IsEnabledClick() { return m_bEnableClick; }
 	HTREEITEM GetBottomItem(void);
 	BOOL IsItemVisible( HTREEITEM hItem );
 	void SetMenuContext( CMenu *pMenu ) { m_pMenuContext = pMenu; }
@@ -48,37 +46,37 @@ public:
 	HTREEITEM GetItemCurr() const { return m_hItemCurr; }
 	CDualTreeItem::Side GetClickSide() const { return m_nClickSide; }
 	TREEPOS GetItemPos( HTREEITEM hItem ) const { return (TREEPOS)GetItemData( hItem ); }
-	UINT GetMouseKeyFlags() const { return m_nMouseKeyFlags; } // // for notify NM_CLICK
+//	UINT GetMouseKeyFlags() const { return m_nMouseKeyFlags; } // // for notify NM_CLICK
 	void InvalidateItem( HTREEITEM hItem );
 	void AdjustVScroll();
 
 protected:
 	DECLARE_MESSAGE_MAP()
 
-	CFont *m_pFont;
-	COLORREF m_crWnd;
-	COLORREF m_crMarkDir;
-	COLORREF m_crMarkDir2;
-	COLORREF m_crMarkLite;
-	COLORREF m_crTxtChanged;
-	COLORREF m_crMarkSingle;
-	CDualTreeItem::Side m_nSide;
-	int m_nItemHeight;
-	int m_nCharWidth;
-//	int m_nPageSize;
-	int m_nCharsLeft;
-	int m_nCharsRight;
-	int m_nOffsLeft;
-	int m_nOffsRight;
-	BOOL m_bEnableDraw;
-	BOOL m_bEnableClick;
-	CMenu *m_pMenuContext;
-	CMenu *m_pMenuContextDir;
-	HTREEITEM m_hItemCurr;
-	CDualTreeItem::Side m_nClickSide;
-	UINT m_nMouseKeyFlags;	// for OnLButtonDown - notify NM_CLICK
-
+	CFont *m_pFont = nullptr;
+	COLORREF m_crWnd = 0;
+	COLORREF m_crMarkDir = 0;
+	COLORREF m_crMarkDir2 = 0;
+	COLORREF m_crMarkLite = 0;
+	COLORREF m_crTxtChanged = 0;
+	COLORREF m_crMarkSingle = 0;
+	CDualTreeItem::Side m_nSide = CDualTreeItem::Side::left;
+	int m_nItemHeight = 10;
+	int m_nCharWidth = 5;
+	int m_nCharsLeft = 0;
+	int m_nCharsRight = 0;
+	int m_nOffsLeft = 0;
+	int m_nOffsRight = 200;
+	BOOL m_bEnableDraw = TRUE;
+	BOOL m_bEnableClick = TRUE;
+	CMenu *m_pMenuContext = nullptr;
+	CMenu *m_pMenuContextDir = nullptr;
+	HTREEITEM m_hItemCurr = NULL;
+	CDualTreeItem::Side m_nClickSide = CDualTreeItem::Side::common;
+//	UINT m_nMouseKeyFlags = 0;	// for OnLButtonDown - notify NM_CLICK
+	
 public:
+	void UpdOffs();
 	virtual void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 	virtual void DrawItem(LPNMTVCUSTOMDRAW lplvcd);
 	virtual void DrawTreeItem(CDC* pDC, LPNMTVCUSTOMDRAW lplvcd) = 0;
@@ -88,7 +86,6 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	void UpdOffs();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnTvnSelchanged(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnTvnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult);

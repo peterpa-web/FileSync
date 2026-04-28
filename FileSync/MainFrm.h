@@ -31,6 +31,7 @@ public:
 	CToolBarSearch& GetToolBarSearch() { return m_wndToolBarSearch; }
 	REBProgressManager* GetProgressMan() { return &m_progressMan; }
 	CViewFileSync* GetNewClient() const { return m_pNewClient; }
+	void OnDelViewDir();
 
 protected:
 	void SaveWinPos();

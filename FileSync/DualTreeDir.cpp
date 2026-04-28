@@ -108,7 +108,7 @@ BOOL CDualTreeDir::DeleteItem( TREEPOS pos )
 
 void CDualTreeDir::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	UINT uFlags;
+	UINT uFlags = 0;
 	HTREEITEM hItem = HitTest(point, &uFlags);
 
 	if ((hItem == NULL))
@@ -125,7 +125,7 @@ void CDualTreeDir::OnLButtonDown(UINT nFlags, CPoint point)
 			}
 			else if ( (nFlags & MK_SHIFT) == MK_SHIFT && hItem != hItemCaret )
 			{
-				SelectRange(hItem);
+				SelectRange(hItemCaret, hItem);
 				return;		// skipping update of caret
 			}
 			else
@@ -153,41 +153,70 @@ void CDualTreeDir::SelectToggle(HTREEITEM hItem)
 	Invalidate();
 }
 
-void CDualTreeDir::SelectRange(HTREEITEM hItem)
+bool CDualTreeDir::IsBackwards(HTREEITEM h0, HTREEITEM h1)
 {
-	HTREEITEM hParent = GetParentItem(hItem);
-	HTREEITEM hCaret = GetSelectedItem();
-	HTREEITEM hParentCaret = GetParentItem(hCaret);
-	if ( hParent != hParentCaret )
+	if (h0 == NULL || h1 == NULL || h0 == h1)
+		return false;
+	HTREEITEM hParent0 = GetParentItem(h0);
+	HTREEITEM hParent1 = GetParentItem(h1);
+	if (hParent0 != hParent1)
+		return false;
+	HTREEITEM hChild = GetChildItem(hParent0);
+	while (hChild != NULL)
+	{
+		if (hChild == h1)
+			return true;
+		if (hChild == h0)
+			return false;
+		hChild = GetNextSiblingItem( hChild );
+	}
+	return false;
+}
+
+void CDualTreeDir::SelectRange(HTREEITEM h0, HTREEITEM h1)
+{
+	if (h0 == NULL || h1 == NULL)
 		return;
-	HTREEITEM hChild = GetChildItem( hParentCaret );
+	if (h0 == h1)
+	{
+		SelectSingle(h0);
+		return;
+	}
+	HTREEITEM hParent0 = GetParentItem(h0);
+	HTREEITEM hParent1 = GetParentItem(h1);
+	if (hParent0 != hParent1)
+		return;
+	if (IsBackwards(h0, h1))
+	{
+		HTREEITEM h = h0;
+		h0 = h1;
+		h1 = h;
+	}
+	HTREEITEM hChild = GetChildItem(hParent0);
 	BOOL bCaret = FALSE;
 	BOOL bCurr = FALSE;
 	BOOL bSel = FALSE;
-	while ( hChild != NULL )
+	while (hChild != NULL)
 	{
-		if ( hChild == hItem )
+		if (hChild == h1)
 			bCurr = TRUE;
-		if ( hChild == hCaret )
+		if (hChild == h0)
 			bCaret = TRUE;
-		if ( !bSel && bCurr != bCaret )
+		if (!bSel && bCurr != bCaret)
 		{
 			bSel = TRUE;
 		}
-		GetItemData( hChild ).Sel( bSel );
-		if ( bSel && bCurr == bCaret )
+		CViewDirItem& vdi = GetItemData(hChild);
+		if (vdi.IsSel(bSel))
+		{
+			vdi.Sel(bSel);
+			CDualTreeDirBase::InvalidateItem(hChild);
+		}
+		if (bSel && bCurr == bCaret)
 			bSel = FALSE;
-		hChild = GetNextSiblingItem( hChild );
+		hChild = GetNextSiblingItem(hChild);
 	}
-	Invalidate();
 }
-
-//BOOL CDualTreeDir::ExpandAll( HTREEITEM hItem )
-//{
-//	m_bExpandAll = TRUE;
-//	return ExpandAllPart( hItem );
-//	return FALSE;
-//}
 
 void CDualTreeDir::ShowPopup( LPPOINT ppt )
 {
@@ -236,7 +265,7 @@ void CDualTreeDir::OnTvnBegindrag(NMHDR *pNMHDR, LRESULT *pResult)
 	}
 
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
-	UINT uFlags;
+	UINT uFlags = 0;
 	HTREEITEM hItem = HitTest(pNMTreeView->ptDrag, &uFlags);
 
 	if ((hItem == NULL))
@@ -304,12 +333,24 @@ void CDualTreeDir::OnTvnBegindrag(NMHDR *pNMHDR, LRESULT *pResult)
 
 void CDualTreeDir::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if ( !m_bDrag && nFlags == MK_LBUTTON )
+	if ( !m_bDrag )
 	{
-		LRESULT res;
-		NMTREEVIEW notify;
-		notify.ptDrag = point;
-		OnTvnBegindrag( (NMHDR*)(&notify), &res);
+		if (nFlags == MK_LBUTTON && m_nClickSide != CDualTreeItem::common)
+		{
+			LRESULT res;
+			NMTREEVIEW notify;
+			notify.ptDrag = point;
+			OnTvnBegindrag((NMHDR*)(&notify), &res);
+		}
+		else if (m_bEnableClick && (nFlags & MK_LBUTTON) != 0 && (nFlags & MK_CONTROL) == 0)
+		{
+			UINT uFlags = 0;
+			HTREEITEM hItem = HitTest(point, &uFlags);
+			if ((hItem != NULL) && ((TVHT_ONITEM | TVHT_ONITEMRIGHT) & uFlags))
+			{
+				SelectRange(GetSelectedItem(), hItem);
+			}
+		}
 	}
 
 	CDualTree<CViewDirItem>::OnMouseMove(nFlags, point);

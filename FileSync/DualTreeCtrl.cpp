@@ -14,19 +14,6 @@
 IMPLEMENT_DYNAMIC(CDualTreeCtrl, CTreeCtrl)
 CDualTreeCtrl::CDualTreeCtrl()
 {
-	m_pFont = NULL;
-	m_nItemHeight = 10;
-	m_nCharWidth = 5;
-//	m_pView = NULL;
-//	m_nPageSize = 0;
-	m_nCharsLeft = 0;
-	m_nCharsRight = 0;
-	m_nOffsLeft = 0;
-	m_nOffsRight = 200;
-	m_bEnableDraw = TRUE;
-	m_bEnableClick = TRUE;
-	m_pMenuContext = NULL;
-	m_nSide = CDualTreeItem::left;
 }
 
 CDualTreeCtrl::~CDualTreeCtrl()
@@ -36,14 +23,11 @@ CDualTreeCtrl::~CDualTreeCtrl()
 
 BEGIN_MESSAGE_MAP(CDualTreeCtrl, CTreeCtrl)
 	ON_NOTIFY_REFLECT(NM_CUSTOMDRAW, OnNMCustomdraw)
-//	ON_CONTROL_REFLECT(LBN_SELCHANGE, OnLbnSelchange)
 	ON_WM_ERASEBKGND()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_SIZE()
 	ON_WM_LBUTTONDBLCLK()
-//	ON_NOTIFY_REFLECT(NM_CLICK, OnNMClick)
 	ON_NOTIFY_REFLECT(TVN_SELCHANGED, OnTvnSelchanged)
-//	ON_NOTIFY_REFLECT(NM_DBLCLK, OnNMDblclk)
 	ON_NOTIFY_REFLECT(TVN_GETDISPINFO, OnTvnGetdispinfo)
 	ON_NOTIFY_REFLECT(TVN_ITEMEXPANDED, OnTvnItemexpanded)
 	ON_WM_RBUTTONDOWN()
@@ -145,34 +129,35 @@ void CDualTreeCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	CRect rectRight = rect;
 	rectRight.left = m_nOffsRight;
 
-	if ( rectLeft.PtInRect( point ) )
+	if (rectLeft.PtInRect(point))
 	{
-		if ( m_nSide != CDualTreeItem::left )
+		if (m_nSide != CDualTreeItem::left)
 		{
 			m_nSide = CDualTreeItem::left;
-			m_nClickSide = CDualTreeItem::left;
 			Invalidate();
 		}
+		m_nClickSide = CDualTreeItem::left;
 	}
-	else if ( rectRight.PtInRect( point ) )
+	else if (rectRight.PtInRect(point))
 	{
 		if ( m_nSide != CDualTreeItem::right )
 		{
 			m_nSide = CDualTreeItem::right;
-			m_nClickSide = CDualTreeItem::right;
 			Invalidate();
 		}
+		m_nClickSide = CDualTreeItem::right;
 	}
+	else
+		m_nClickSide = CDualTreeItem::common;
 
 	if ( !m_bEnableClick )
 		return;
 
-	UINT uFlags;
+	UINT uFlags = 0;
 	HTREEITEM hItem = HitTest(point, &uFlags);
-
 	if ((hItem != NULL) && ((TVHT_ONITEM | TVHT_ONITEMRIGHT) & uFlags))
 	{
-		m_nMouseKeyFlags = nFlags;
+//		m_nMouseKeyFlags = nFlags;
 		Select(hItem, TVGN_CARET);
 	}
 	CTreeCtrl::OnLButtonDown(nFlags, point);
@@ -184,9 +169,6 @@ void CDualTreeCtrl::UpdOffs()
 	GetClientRect( rect );
 	int nOffsLeft;
 	int nOffsRight;
-//	m_nPageSize = rect.Height() / (m_nItemHeight+2);
-//	if ( GetVisibleCount() < m_nPageSize )					// 20100819
-//		rect.right -= 20;	// reserve for scroll bar
 	if ( m_nCharsLeft == 0 )
 	{
 		nOffsLeft = 0;
@@ -335,7 +317,7 @@ void CDualTreeCtrl::OnTvnItemexpanded(NMHDR *pNMHDR, LRESULT *pResult)
 
 void CDualTreeCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 {
-	UINT uFlags;
+	UINT uFlags = 0;
 	HTREEITEM hItem = HitTest( point, &uFlags );
 	if ( hItem != NULL && m_pMenuContext != NULL && ((TVHT_ONITEM | TVHT_ONITEMRIGHT) & uFlags) )
 	{

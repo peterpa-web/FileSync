@@ -43,6 +43,7 @@ CViewDir::CViewDir(void) : m_tree( m_treeData )
 CViewDir::~CViewDir(void)
 {
 	TRACE1( "CViewDir::~CViewDir() %x\n", this );
+	m_pMainWnd->OnDelViewDir();
 }
 
 BEGIN_MESSAGE_MAP(CViewDir, CViewFileSync)
@@ -136,6 +137,7 @@ END_MESSAGE_MAP()
 
 void CViewDir::OnInitialUpdate2()
 {
+	m_pMainWnd = GetParentFrame();
 	VERIFY( m_buttonsLeft[0].Create(this, ID_FILE_OPENDIRLEFT, IDB_OPENDIR) );
 	VERIFY( m_buttonsRight[0].Create(this, ID_FILE_OPENDIRRIGHT, IDB_OPENDIR) );
 	VERIFY( m_buttonsLeft[1].Create(this, ID_FILE_OPEN_LEFT, IDB_OPEN) );
@@ -145,7 +147,7 @@ void CViewDir::OnInitialUpdate2()
 
 	CRect rect(5,50,200,250);
 	m_tree.PrepareFont( &m_fontList );
-	VERIFY( m_tree.Create( WS_VISIBLE | WS_VSCROLL | 
+	VERIFY( m_tree.Create( WS_VISIBLE | WS_VSCROLL | TVS_DISABLEDRAGDROP |
 							TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS | TVS_SHOWSELALWAYS,
 							rect, this, IDC_LIST ) );
 	m_tree.SetImageList( &m_imagelist, TVSIL_NORMAL );
@@ -338,6 +340,7 @@ void CViewDir::InitDoc( const CString &strPath, int nSide )
 	CDocFileSync *pDoc = pDM->CreateDocumentDir( strPath );
 	if ( pDoc != NULL )
 	{
+		TRACE0("InitDoc CreateDocumentDir\n");
 		pOldDocTemplate->RemoveDocument(pOldDoc);
 		delete pOldDoc;
 		m_pDoc[ nSide ] = pDoc;
@@ -1183,6 +1186,10 @@ bool CViewDir::MoveSel()
 			d.GetName() != _T(".."))
 		{
 			if (d.IsPresent(1 - nSide))
+				return false;
+			if (d.GetDirEntry(nSide).IsRO())
+				return false;
+			if (!d.GetParentDoc(1 - nSide)->CheckPath())
 				return false;
 		}
 		hItem = m_tree.GetNextSel(hItem);

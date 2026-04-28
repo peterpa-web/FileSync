@@ -16,10 +16,8 @@ public:
 	HTREEITEM InsertItem( POSITION pos ); // insert item into tree ctrl
 	BOOL DeleteItem( HTREEITEM hItem ) { return CDualTreeDirBase::DeleteItem( hItem ); }
 	BOOL DeleteItem( TREEPOS pos );
-//	BOOL ExpandAll( HTREEITEM hItem );
 	HTREEITEM GetFirstSel();
 	HTREEITEM GetNextSel(HTREEITEM hItem);
-//	BOOL IsAnySel(); // for current side 10200901 del
 	BOOL AllSelAreReady(); // for current side
 	void SelDiffChilds( int nSide, HTREEITEM hItem );
 	virtual void ShowPopup( LPPOINT ppt );
@@ -37,8 +35,6 @@ public:
 	BOOL IsArcExpand( TREEPOS pos ) const;
 	BOOL Expand( TREEPOS pos );
 	BOOL Collapse( HTREEITEM hItem ) { return CDualTreeDirBase::Expand( hItem, TVE_COLLAPSE ); }
-//	BOOL Collapse( TREEPOS pos );
-//	BOOL Free( TREEPOS pos );
 	void FreeItemRecursive( TREEPOS pos, BOOL bDel=FALSE );
 	BOOL IsExpanding() const { return m_bExpanding; }
 	BOOL EnsureVisible( HTREEITEM hItem ) { return CDualTreeDirBase::EnsureVisible(hItem); }
@@ -59,7 +55,8 @@ public:
 protected:
 	void SelectSingle(HTREEITEM hItem);
 	void SelectToggle(HTREEITEM hItem);
-	void SelectRange(HTREEITEM hItem);
+	bool IsBackwards(HTREEITEM h0, HTREEITEM h1);
+	void SelectRange(HTREEITEM h0, HTREEITEM h1);
 	HTREEITEM GetFirstSelInt(HTREEITEM hItem);
 	int GetFileCount( int nSide, HTREEITEM hItem );
 

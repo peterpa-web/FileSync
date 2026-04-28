@@ -32,6 +32,7 @@ public:
 	BOOL IsReadOnly() { return m_bReadOnly; }
 	CViewFileSync* GetViewDir();
 	void SetType( CDocTemplFileSync* pTemplate );
+	void ResetViewDir();
 
 	CString m_strInitialDir;	// for DoPromptFileName(), OnDirOpen(), OpenDocumentDir()
 	CString m_strType;			// from CFileDialogExt
