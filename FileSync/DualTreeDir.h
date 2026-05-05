@@ -51,10 +51,10 @@ public:
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 
 protected:
 	void SelectSingle(HTREEITEM hItem);
-	void SelectToggle(HTREEITEM hItem);
 	bool IsBackwards(HTREEITEM h0, HTREEITEM h1);
 	void SelectRange(HTREEITEM h0, HTREEITEM h1);
 	HTREEITEM GetFirstSelInt(HTREEITEM hItem);

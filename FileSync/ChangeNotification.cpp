@@ -259,7 +259,7 @@ UINT CChangeNotification::ThreadProc( LPVOID pParam )
 		}
 		else if ( dwWaitStatus == WAIT_TIMEOUT )	// timeout: try restart
 		{
-			TRACE1("CChangeNotification::ThreadProc timeout at %d\n", GetTickCount());
+//			TRACE1("CChangeNotification::ThreadProc timeout at %d\n", GetTickCount());
 			for ( int n = 0; n < s_nHandlesRst; ++n ) {
 				if ( s_pObjRst[n]->m_bRestart ) {
 					if ( s_pObjRst[n]->MonitorRestart() ) {

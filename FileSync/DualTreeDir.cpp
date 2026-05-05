@@ -4,11 +4,13 @@
 #include "DragDropImpl.h"
 #include "ViewDirItem.h"
 #include "DualTreeDirData.h"
+#include "resource.h"
 
 #include "DualTreeDir.h"
 
 BEGIN_MESSAGE_MAP(CDualTreeDir, CDualTree<CViewDirItem>)
 	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
 	ON_NOTIFY_REFLECT(TVN_BEGINDRAG, OnTvnBegindrag)
 	ON_WM_MOUSEMOVE()
 	ON_WM_SETCURSOR()
@@ -57,10 +59,14 @@ HTREEITEM CDualTreeDir::InsertItem( POSITION pos )
 	if ( hAfter == NULL )
 		hAfter = TVI_FIRST;
 	HTREEITEM hItem = CDualTreeDirBase::InsertItem( pos, hParent, hAfter );
-	ASSERT( hItem != NULL );
-	d.SetItemHandle( hItem );
-	if ( d.GetIcon() != CDocFileSync::IconUnknown )
-		SetItemImage( hItem, d.GetIcon(), d.GetIcon() ); 
+	if (hItem != NULL)
+	{
+		d.SetItemHandle(hItem);
+		if (d.GetIcon() != CDocFileSync::IconUnknown)
+			SetItemImage(hItem, d.GetIcon(), d.GetIcon());
+	}
+	else
+		ASSERT(FALSE);
 	if ( d.HasDirIcon() )
 	{
 		if ( d.GetName() != _T("..") )
@@ -108,48 +114,64 @@ BOOL CDualTreeDir::DeleteItem( TREEPOS pos )
 
 void CDualTreeDir::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	UINT uFlags = 0;
-	HTREEITEM hItem = HitTest(point, &uFlags);
+	int nSide = -1;
+	HTREEITEM hItem = HitTestSide(point, &nSide);
 
 	if ((hItem == NULL))
 		return;
-	if ( m_bEnableClick &&
-		(uFlags & (TVHT_ONITEM | TVHT_ONITEMRIGHT)) != 0 )
+	if (m_bEnableClick)
 	{
 		HTREEITEM hItemCaret = GetSelectedItem();
-		if ( hItemCaret != NULL )
+		if (nSide == CDualTreeItem::common)
 		{
-			if ( (nFlags & MK_CONTROL) == MK_CONTROL )
-			{
-				SelectToggle(hItem);
-			}
-			else if ( (nFlags & MK_SHIFT) == MK_SHIFT && hItem != hItemCaret )
+			if ( (nFlags & MK_SHIFT) == MK_SHIFT && hItem != hItemCaret )
 			{
 				SelectRange(hItemCaret, hItem);
 				return;		// skipping update of caret
 			}
-			else
-				SelectSingle(hItem);
+			else if (!IsSel(hItem))
+			{
+				if ((nFlags & MK_CONTROL) == MK_CONTROL)
+				{
+					Sel(hItem);
+					Invalidate();
+				}
+				else
+					SelectSingle(hItem);
+			}
+			else if (nSide == CDualTreeItem::common && IsSel(hItem))
+			{
+				Sel(hItem, FALSE);
+				Invalidate();
+			}
 		}
-		else
-			SelectSingle(hItem);
 	}
 	CDualTreeDirBase::OnLButtonDown(nFlags, point);
+}
+
+void CDualTreeDir::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	HTREEITEM hItem = HitTestSide(point);
+
+	if ((hItem == NULL))
+		return;
+	if (m_bEnableClick)
+	{
+		HTREEITEM hItemCaret = GetSelectedItem();
+		if (hItemCaret != NULL)
+		{
+		if ((point.x >= m_nOffsLeft && point.x < m_nOffsRight && m_nClickSide == CDualTreeItem::right) ||
+				(point.x >= m_nOffsRight && m_nClickSide == CDualTreeItem::left))
+				::PostMessage(GetParent()->m_hWnd, WM_COMMAND, ID_EDIT_REPLACESEL | (BN_CLICKED << 16), NULL);
+		}
+	}
+	CDualTreeDirBase::OnLButtonUp(nFlags, point);
 }
 
 void CDualTreeDir::SelectSingle(HTREEITEM hItem)
 {
 	UnselectAll();
 	Sel( hItem );
-	Invalidate();
-}
-
-void CDualTreeDir::SelectToggle(HTREEITEM hItem)
-{
-	if ( IsSel( hItem ) )
-		Sel( hItem, FALSE );
-	else
-		Sel( hItem );
 	Invalidate();
 }
 
@@ -298,32 +320,36 @@ void CDualTreeDir::OnTvnBegindrag(NMHDR *pNMHDR, LRESULT *pResult)
 
 	// medium.hGlobal = init to path
 	SIZE_T dwBytes = sizeof(DROPFILES) + 2*strPath.GetLength()+4; //for 2*NULL
-	medium.hGlobal = GlobalAlloc(GMEM_MOVEABLE,dwBytes );
-	BYTE* pMem = (BYTE*)GlobalLock(medium.hGlobal);
-	memset(pMem, 0, dwBytes);
-	LPDROPFILES pDF = (LPDROPFILES)pMem;
-	TCHAR* pFiles = (TCHAR*)(pMem+sizeof(DROPFILES));
-	pDF->pFiles = sizeof(DROPFILES);
-#ifdef _UNICODE
-	pDF->fWide = TRUE;
-#else
-	pDF->fWide = FALSE;
-#endif
-	_tcscpy_s(pFiles,strPath.GetLength()+1, strPath);
-	GlobalUnlock(medium.hGlobal);
+	medium.hGlobal = GlobalAlloc(GMEM_MOVEABLE, dwBytes);
+	if (medium.hGlobal != NULL)
+	{
+		BYTE* pMem = (BYTE*)GlobalLock(medium.hGlobal);
+		if (pMem != NULL)
+		{
+			memset(pMem, 0, dwBytes);
+			LPDROPFILES pDF = (LPDROPFILES)pMem;
+			TCHAR* pFiles = (TCHAR*)(pMem + sizeof(DROPFILES));
+			pDF->pFiles = sizeof(DROPFILES);
+			pDF->fWide = TRUE;
+			_tcscpy_s(pFiles, strPath.GetLength() + 1, strPath);
+			GlobalUnlock(medium.hGlobal);
 
-	// Add it to DataObject
-	pdobj->SetData(&fmtetc,&medium,TRUE);   
+			// Add it to DataObject
+			pdobj->SetData(&fmtetc, &medium, TRUE);
 
-	// Initiate the Drag & Drop
-	DWORD dwEffect;
-	HRESULT hr = ::DoDragDrop(pdobj, pdsrc, DROPEFFECT_COPY, &dwEffect);
-	if ( hr == DRAGDROP_S_DROP ) {
-		TRACE0("DRAGDROP_S_DROP\n");
-	} else if ( hr == DRAGDROP_S_CANCEL ) {
-		TRACE0("DRAGDROP_S_CANCEL\n");
-	} else {
-		TRACE0("E_UNSPEC\n");
+			// Initiate the Drag & Drop
+			DWORD dwEffect;
+			HRESULT hr = ::DoDragDrop(pdobj, pdsrc, DROPEFFECT_COPY, &dwEffect);
+			if (hr == DRAGDROP_S_DROP) {
+				TRACE0("DRAGDROP_S_DROP\n");
+			}
+			else if (hr == DRAGDROP_S_CANCEL) {
+				TRACE0("DRAGDROP_S_CANCEL\n");
+			}
+			else {
+				TRACE0("E_UNSPEC\n");
+			}
+		}
 	}
 	pdsrc->Release();
 	pdobj->Release();
@@ -335,25 +361,37 @@ void CDualTreeDir::OnMouseMove(UINT nFlags, CPoint point)
 {
 	if ( !m_bDrag )
 	{
-		if (nFlags == MK_LBUTTON && m_nClickSide != CDualTreeItem::common)
+		if (nFlags == (MK_LBUTTON | MK_SHIFT) && m_nClickSide != CDualTreeItem::common)
 		{
 			LRESULT res;
 			NMTREEVIEW notify;
 			notify.ptDrag = point;
 			OnTvnBegindrag((NMHDR*)(&notify), &res);
 		}
-		else if (m_bEnableClick && (nFlags & MK_LBUTTON) != 0 && (nFlags & MK_CONTROL) == 0)
+		else if (m_bEnableClick && (nFlags & MK_LBUTTON) != 0)
 		{
-			UINT uFlags = 0;
-			HTREEITEM hItem = HitTest(point, &uFlags);
-			if ((hItem != NULL) && ((TVHT_ONITEM | TVHT_ONITEMRIGHT) & uFlags))
+			int nSide = -1;
+			HTREEITEM hItem = HitTestSide(point, &nSide);
+			if (hItem != NULL)
 			{
-				SelectRange(GetSelectedItem(), hItem);
+				if (nSide == CDualTreeItem::common && (nFlags & MK_CONTROL) == 0)
+				{
+					SelectRange(GetSelectedItem(), hItem);
+				}
+				else if (IsAnySel())
+				{
+					if (nSide == m_nSide)
+						::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_SIZEALL));
+					else if (nSide == CDualTreeItem::right)
+						::SetCursor(AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32658)));	// ->
+					else if (nSide == CDualTreeItem::left)
+						::SetCursor(AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32657)));	// <-
+				}
 			}
 		}
 	}
 
-	CDualTree<CViewDirItem>::OnMouseMove(nFlags, point);
+	CDualTreeDirBase::OnMouseMove(nFlags, point);
 }
 
 HTREEITEM CDualTreeDir::GetFirstSel()
@@ -372,19 +410,6 @@ HTREEITEM CDualTreeDir::GetNextSel(HTREEITEM hItem)
 		return GetNextSel( GetParentItem(hItem) );
 	return GetFirstSelInt( hNext );
 }
-
-//BOOL CDualTreeDir::IsAnySel()	// 10200910 del
-//{
-//	HTREEITEM hItem = GetFirstSel();
-//	while ( hItem != NULL )
-//	{
-//		CViewDirItem &d = GetItemData( hItem );
-//		if ( d.IsPresent(m_nSide) && d.IsAnySel() )
-//			return TRUE;
-//		hItem = GetNextSel( hItem );
-//	}
-//	return FALSE;
-//}
 
 BOOL CDualTreeDir::AllSelAreReady()
 {

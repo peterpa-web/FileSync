@@ -157,7 +157,6 @@ void CDualTreeCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	HTREEITEM hItem = HitTest(point, &uFlags);
 	if ((hItem != NULL) && ((TVHT_ONITEM | TVHT_ONITEMRIGHT) & uFlags))
 	{
-//		m_nMouseKeyFlags = nFlags;
 		Select(hItem, TVGN_CARET);
 	}
 	CTreeCtrl::OnLButtonDown(nFlags, point);
@@ -358,4 +357,26 @@ void CDualTreeCtrl::AdjustVScroll()
 			EnableScrollBar( SB_VERT, FALSE );
 		}
 	}
+}
+
+HTREEITEM CDualTreeCtrl::HitTestSide(CPoint pt, int* pSide) const
+{
+	UINT uFlags = 0;
+	HTREEITEM hItem = HitTest(pt, &uFlags);
+	if ((hItem == NULL))
+		return NULL;
+	if ((uFlags & (TVHT_ONITEM | TVHT_ONITEMRIGHT)) != 0)
+	{
+		if (pSide != nullptr)
+		{
+			if (pt.x < m_nOffsLeft)
+				*pSide = CDualTreeItem::common;
+			else if (pt.x < m_nOffsRight)
+				*pSide = CDualTreeItem::left;
+			else
+				*pSide = CDualTreeItem::right;
+		}
+		return hItem;
+	}
+	return NULL;
 }

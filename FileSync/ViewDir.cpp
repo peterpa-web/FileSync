@@ -1174,6 +1174,7 @@ bool CViewDir::IsSameDrive()
 
 bool CViewDir::MoveSel()
 {
+	TRACE0("MoveSel()\n");
 	int nSide = s_nSide;
 	CString strSrc = GetDoc(nSide)->GetPathName();
 	if (!IsSameDrive())
@@ -1226,6 +1227,7 @@ void CViewDir::OnEditReplacesel()
 			return;
 	}
 
+	TRACE0("OnEditReplacesel()\n");
 	int nSide = s_nSide;
 	CDialogReplace dlg;
 	if ( dlg.DoModal() != IDOK )
