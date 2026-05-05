@@ -46,9 +46,9 @@ public:
 	HTREEITEM GetItemCurr() const { return m_hItemCurr; }
 	CDualTreeItem::Side GetClickSide() const { return m_nClickSide; }
 	TREEPOS GetItemPos( HTREEITEM hItem ) const { return (TREEPOS)GetItemData( hItem ); }
-//	UINT GetMouseKeyFlags() const { return m_nMouseKeyFlags; } // // for notify NM_CLICK
 	void InvalidateItem( HTREEITEM hItem );
 	void AdjustVScroll();
+	HTREEITEM HitTestSide(_In_ CPoint pt, _In_opt_ int* pSide = nullptr) const;
 
 protected:
 	DECLARE_MESSAGE_MAP()
