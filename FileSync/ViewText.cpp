@@ -287,6 +287,8 @@ void CViewText::DeleteContents2()
 	TRACE1( "CViewText::DeleteContents2() %dms\n", GetTickCount()-dwTicksStart );
 }
 
+int sCalls = 99;
+
 BOOL CViewText::CompareView()
 {
 #ifdef _DEBUG
@@ -299,8 +301,10 @@ BOOL CViewText::CompareView()
 	CPosArray aposUniR;
 	CDocText *pDocL = GetDoc(0);
 	CDocText *pDocR = GetDoc(1);
-	ASSERT( pDocL != NULL );
-	ASSERT( pDocR != NULL );
+	if (pDocL == nullptr)
+		return FALSE;
+	if (pDocR == nullptr)
+		return FALSE;
 	changeNotify[0].MonitorFile( pDocL->GetBasePathName(), pDocL->GetPathName() );
 	changeNotify[1].MonitorFile( pDocR->GetBasePathName(), pDocR->GetPathName() );
 	m_buttonsLeft[1].SetDlgCtrlID(ID_FILE_MODELEFT);
@@ -321,8 +325,9 @@ BOOL CViewText::CompareView()
 
 	POSLINE posL = pDocL->GetFirstLine();
 	POSLINE posR = pDocR->GetFirstLine();
+	sCalls = 0;
 //	TRACE( "Compare start\n" );
-	TRACE1( "CViewText::CompareView() s %dms\n", GetTickCount()-dwTicksStart );
+	TRACE1( "CompareView() s %dms\n", GetTickCount()-dwTicksStart );
 
 	CItemDataArray aItems;
 	if ( !CompareUniqueBlock1( aItems, pDocL, posL,  NULL, pDocR, posR, NULL ) )
@@ -454,7 +459,7 @@ void CViewText::CompareUniqueBlock2( CItemDataArray &aItems,
 	CItemDataArray aSubItems;
 	CompareBlock( aSubItems, pDocL, posL, posLM, pDocR, posR, posRM );
 	aItems.Append( aSubItems );
-	TRACE1( "CViewText::CompareUniqueBlock1() %dms\n", GetTickCount()-dwTicksStart );
+	TRACE1( "CViewText::CompareUniqueBlock2() %dms\n", GetTickCount()-dwTicksStart );
 }
 
 int CViewText::CompareBlock( CItemDataArray &aItems,
@@ -464,10 +469,16 @@ int CViewText::CompareBlock( CItemDataArray &aItems,
 #ifdef _DEBUG
 //	DWORD dwTicksStart = GetTickCount();
 #endif
+	if (pDocL == nullptr)
+		return 0;
+	if (pDocR == nullptr)
+		return 0;
+	TRACE3("CompareBlock %d %d %d", sCalls, pDocL->GetLineNo(posL), pDocR->GetLineNo(posR));
 	int nMatch = 0;		// return value
-	TRACE2( "CViewText::CompareBlock %d %d", pDocL->GetLineNo( posL ), pDocR->GetLineNo( posR ) );
-	ASSERT( pDocL != NULL );
-	ASSERT( pDocR != NULL );
+	if (sCalls > 20)
+		return nMatch;
+	++sCalls;
+
 	int nLinesL = pDocL->GetLineCount( posL, posLU );
 	int nLinesR = pDocR->GetLineCount( posR, posRU );
 	TRACE2( " lines %d %d \n", nLinesL, nLinesR );
@@ -581,6 +592,8 @@ int CViewText::CompareBlock( CItemDataArray &aItems,
 		{
 			aItems.Append( aItemsU );
 //			TRACE1( "CViewText::CompareBlock() %dms\n", GetTickCount()-dwTicksStart );
+			TRACE1( "CViewText::CompareBlock() %d\n", nMatch + nMatchB );
+			--sCalls;
 			return nMatch + nMatchB;
 		}
 		InsertBlock( aItems, pDocL, posL, posLB, nLinesL, pDocR, posR, posRB, nLinesR );
@@ -589,6 +602,8 @@ int CViewText::CompareBlock( CItemDataArray &aItems,
 	InsertBlock( aItems, pDocL, posL, posLB, nLinesL, pDocR, posR, posRB, nLinesR );
 	aItems.Append( aItemsU );
 //	TRACE1( "CViewText::CompareBlock() %dms\n", GetTickCount()-dwTicksStart );
+	TRACE1("CViewText::CompareBlock() %d\n", nMatch);
+	--sCalls;
 	return nMatch;
 }
 
