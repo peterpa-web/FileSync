@@ -311,11 +311,16 @@
     <None Include="res\bitmapOpenDir.bmp" />
     <None Include="res\check.bmp" />
     <None Include="res\CLSDFOLD.ICO" />
+    <None Include="res\cursor1.cur" />
     <None Include="res\dircomp.bmp" />
     <None Include="res\filecomp.bmp" />
     <None Include="res\FileSync.ico" />
     <None Include="res\FileSync.manifest" />
     <None Include="res\FileSync.rc2" />
+    <None Include="res\insert_la.cur" />
+    <None Include="res\insert_lb.cur" />
+    <None Include="res\insert_ra.cur" />
+    <None Include="res\insert_rb.cur" />
     <None Include="res\mode-G.bmp" />
     <None Include="res\mode-GY.bmp" />
     <None Include="res\mode-R.bmp" />
@@ -332,6 +337,8 @@
     <None Include="res\opendir_men.bmp" />
     <None Include="res\openmenu.bmp" />
     <None Include="res\open_foc.bmp" />
+    <None Include="res\replace_lr.cur" />
+    <None Include="res\replace_rl.cur" />
     <None Include="res\Toolbar.bmp" />
     <None Include="res\toolbarLR.bmp" />
     <None Include="res\bitmapOpen.bmp" />

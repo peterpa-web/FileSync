@@ -54,6 +54,12 @@
 #define IDB_OPENDIR_MENU                197
 #define IDB_DIRCOMP                     198
 #define IDB_FILECOMP                    199
+#define IDC_REPLACE_LR                  200
+#define IDC_REPLACE_RL                  201
+#define IDC_INSERT_LA                   202
+#define IDC_INSERT_LB                   203
+#define IDC_INSERT_RA                   204
+#define IDC_INSERT_RB                   205
 #define IDC_LIST                        1000
 #define IDC_BIGICON                     1000
 #define IDC_LIST_RIGHT                  1001
@@ -143,13 +149,15 @@
 #define ID_DIR_FREE                     32817
 #define ID_VIEW_PROJECT                 32818
 #define ID_VIEW_LINK                    32819
+#define ID_EDIT_COPYDETAILS             32820
+#define ID_EDIT_COPYPATH                32821
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        200
-#define _APS_NEXT_COMMAND_VALUE         32820
+#define _APS_NEXT_RESOURCE_VALUE        206
+#define _APS_NEXT_COMMAND_VALUE         32822
 #define _APS_NEXT_CONTROL_VALUE         1043
 #define _APS_NEXT_SYMED_VALUE           106
 #endif

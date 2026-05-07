@@ -24,11 +24,19 @@ CViewText::CViewText(void)
 	m_nToolbarID[0] = IDR_VIEWTEXT;
 	m_nToolbarID[1] = IDR_VIEWTEXT_R;
 
-//	m_nWidthLineNo = 42;
-	m_nCharOffs = 0;
-	m_pEdit = NULL;
-
 	m_undoBuffer.SetMaxSize( 10000000 );
+
+	m_hCursorStd = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
+	m_hCursorMoveR = AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32658));
+	m_hCursorMoveL = AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32657));
+	m_hCursorHand = AfxGetApp()->LoadStandardCursor(IDC_HAND);
+	m_hCursorNo = AfxGetApp()->LoadStandardCursor(IDC_NO);
+	m_hCursorReplaceLR = AfxGetApp()->LoadCursor(IDC_REPLACE_LR);
+	m_hCursorReplaceRL = AfxGetApp()->LoadCursor(IDC_REPLACE_RL);
+	m_hCursorInsertLA = AfxGetApp()->LoadCursor(IDC_INSERT_LA);
+	m_hCursorInsertLB = AfxGetApp()->LoadCursor(IDC_INSERT_LB);
+	m_hCursorInsertRA = AfxGetApp()->LoadCursor(IDC_INSERT_RA);
+	m_hCursorInsertRB = AfxGetApp()->LoadCursor(IDC_INSERT_RB);
 }
 
 CViewText::~CViewText(void)
@@ -1040,7 +1048,7 @@ HGLOBAL CViewText::SelCopy()
 	}
 	ASSERT( nStart != LB_ERR );
 	ASSERT( nEnd != LB_ERR );
-	TRACE2( "CViewText::SelCopy start=%d end=%d\n", nStart, nEnd );
+	TRACE2( "SelCopy start=%d end=%d\n", nStart, nEnd );
 
 	int nSide = s_nSide;
 	CDocText *pDoc = GetCurrDoc();
@@ -1060,7 +1068,10 @@ HGLOBAL CViewText::SelCopy()
 	if (hg == NULL) 
 		return NULL; 
 
-	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hg); 
+	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hg);
+	if (lptstrCopy == nullptr)
+		return NULL;
+
 	for ( n = nStart; n <= nEnd; ++n )
 	{
 		POSLINE pos = m_aItemData[n].pos[nSide];
@@ -1471,7 +1482,7 @@ BOOL CViewText::IsNoDifference()
 	return TRUE;
 }
 
-void CViewText::OnListLButtonDown()
+void CViewText::EndEdit()
 {
 	if ( m_pEdit != NULL )
 	{
@@ -1479,7 +1490,110 @@ void CViewText::OnListLButtonDown()
 		delete m_pEdit;
 		m_pEdit = NULL;
 	}
-	SetFocus();
+}
+
+void CViewText::OnListLButtonDown(UINT nItem, UINT nFlags, CPoint point)
+{
+	EndEdit();
+	Side nSide = left;
+	if (point.x >= m_list.GetOffsRight())
+	{
+		nSide = right;
+	}
+	if (nSide == s_nSide)
+	{
+	//	m_bDragLocal = TRUE;
+		if (nSide == left)
+			::SetCursor(m_hCursorMoveR);
+		else
+			::SetCursor(m_hCursorMoveL);
+	}
+}
+
+void CViewText::OnListLButtonUp(UINT nItem, UINT nFlags, CPoint point)
+{
+	int nItemCaret = m_list.GetCaretIndex();
+	if (nItemCaret >= 0 && m_bDragLocal)
+	{
+		Side nSide = left;
+		if (point.x >= m_list.GetOffsRight())
+		{
+			nSide = right;
+		}
+		if (s_nSide == (1 - nSide))
+		{
+			if ((int)nItem < m_list.GetSelFirst())
+				PostMessage(WM_COMMAND, ID_EDIT_INSERTBEFORE | (BN_CLICKED << 16), NULL);
+			else if ((int)nItem > m_list.GetSelLast())
+				PostMessage(WM_COMMAND, ID_EDIT_INSERTAFTER | (BN_CLICKED << 16), NULL);
+			else
+				PostMessage(WM_COMMAND, ID_EDIT_REPLACESEL | (BN_CLICKED << 16), NULL);
+		}
+	}
+	m_bDragLocal = FALSE;
+}
+
+void CViewText::OnListMouseMove(UINT nItem, UINT nFlags, CPoint point)
+{
+	if (m_pEdit != nullptr)
+		return;
+
+	Side nSide = left;
+	if (point.x >= m_list.GetOffsRight())
+	{
+		point.x -= m_list.GetOffsRight();
+		nSide = right;
+	}
+	if (point.x < m_nWidthLineNo && !m_bDragLocal &&
+		(nFlags & MK_CONTROL) == 0 && (nFlags & MK_LBUTTON) != 0)
+	{
+		m_list.InvalidateSel();
+		int nItemClick = m_list.GetAnchorIndex();
+		m_list.SelItemRange(TRUE, nItemClick, nItem);
+		m_list.InvalidateSel();
+	}
+	else // if (m_list.IsSel(nItem))
+	{
+		if ((nFlags & MK_LBUTTON) == 0 && m_list.IsSel(nItem))
+		{
+			if (nSide == s_nSide)
+				::SetCursor(m_hCursorHand);
+		}
+		else
+		{
+			if (nSide == (1 - s_nSide))
+			{
+				if (nSide == right)
+				{
+					if ((int)nItem < m_list.GetSelFirst())
+						::SetCursor(m_hCursorInsertLB);
+					else if ((int)nItem > m_list.GetSelLast())
+						::SetCursor(m_hCursorInsertLA);
+					else
+						::SetCursor(m_hCursorReplaceLR);
+				}
+				else
+				{
+					if ((int)nItem < m_list.GetSelFirst())
+						::SetCursor(m_hCursorInsertRB);
+					else if ((int)nItem > m_list.GetSelLast())
+						::SetCursor(m_hCursorInsertRA);
+					else
+						::SetCursor(m_hCursorReplaceRL);
+				}
+			}
+			else if (m_list.IsSel(nItem))
+			{
+				m_bDragLocal = TRUE;
+				if (nSide == left)
+					::SetCursor(m_hCursorMoveR);
+				else if (nSide == right)
+					::SetCursor(m_hCursorMoveL);
+				else
+					::SetCursor(m_hCursorNo);
+			}
+		}
+	}
 }
 
 void CViewText::OnListDblClk(UINT nItem, int nSide, const CRect &rect, CPoint point)
@@ -1698,7 +1812,7 @@ void CViewText::QuickFixLine(UINT nItem, int nSide, const CRect &rect, CPoint po
 
 void CViewText::OnListVScroll()
 {
-	OnListLButtonDown();	// remove m_pEdit if present
+	EndEdit();
 }
 
 void CViewText::OnSearch()

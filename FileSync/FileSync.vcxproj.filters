@@ -642,6 +642,27 @@
     <None Include="res\iconxml.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="res\cursor1.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\replace_lr.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\replace_rl.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\insert_la.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\insert_lb.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\insert_ra.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\insert_rb.cur">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FileSync.rc">

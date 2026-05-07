@@ -39,6 +39,7 @@ public:
 	int GetCaretIndex( ) const { return m_nCaret; }
 	int GetSelCount( ) const;
 	int SetSel( int nIndex, BOOL bSelect = TRUE );
+	BOOL IsSel(int nIndex);
 	int SetTopIndex( int nIndex, BOOL bInvalidate = TRUE );
 	void SetAnchorIndex( int nIndex );
 	int SetCaretIndex( int nIndex, BOOL bScroll = TRUE );
@@ -46,6 +47,11 @@ public:
 	UINT ItemFromPoint( CPoint pt, BOOL& bOutside ) const;
 	int GetItemRect( int nIndex, LPRECT lpRect ) const;
 	int GetSelFirst() { return m_nSelFirst; }
+	int GetSelLast() { return m_nSelLast; }
+	int GetBottomIndex(void);
+	void UpdOffs();
+	void InvalidateItem(int nItem);
+	void InvalidateSel();
 
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -74,11 +80,10 @@ public:
 	afx_msg void OnLbnSelchange();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	int GetBottomIndex(void);
-	void UpdOffs();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-//	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnPaint();
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);

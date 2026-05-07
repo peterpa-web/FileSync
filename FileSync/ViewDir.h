@@ -74,6 +74,8 @@ protected:
 
 	void UpdateHScroll();
 	HGLOBAL SelCopy();
+	HGLOBAL SelCopyDetails();
+	HGLOBAL SelCopyPath();
 	CString GetLastErrorText(DWORD dwLastError=0);
 	CString GetDriveName(const CString& strPath);
 	bool IsSameDrive();
@@ -122,6 +124,8 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnUpdateEditCopy(CCmdUI *pCmdUI);
 	afx_msg void OnEditCopy();
+	afx_msg void OnEditCopyDetails();
+	afx_msg void OnEditCopyPath();
 	afx_msg void OnUpdateEditReplacesel(CCmdUI *pCmdUI);
 	afx_msg void OnEditReplacesel();
 	afx_msg void OnUpdateEditDelete(CCmdUI *pCmdUI);

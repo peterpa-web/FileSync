@@ -42,6 +42,8 @@ BEGIN_MESSAGE_MAP(CDualListBox, CWnd)
 //ON_CONTROL_REFLECT(LBN_SELCHANGE, OnLbnSelchange)
 ON_WM_ERASEBKGND()
 ON_WM_LBUTTONDOWN()
+ON_WM_LBUTTONUP()
+ON_WM_MOUSEMOVE()
 ON_WM_SIZE()
 ON_WM_LBUTTONDBLCLK()
 //ON_WM_RBUTTONDOWN()
@@ -174,27 +176,49 @@ void CDualListBox::OnLButtonDown(UINT nFlags, CPoint point)
 			Invalidate();
 		}
 	}
-	m_pView->OnListLButtonDown();
-//	CListBox::OnLButtonDown(nFlags, point);		// 200603
 	BOOL bOutside;
 	UINT nItem = ItemFromPoint( point, bOutside );
 	if ( !bOutside )
 	{
+		m_pView->OnListLButtonDown(nItem, nFlags, point);
 		m_nCaret = nItem;
-		if ( (nFlags & MK_SHIFT) == 0 )
-			SetAnchorIndex( nItem );
-		if ( m_nAnchor < m_nCaret )
+		if (!IsSel(nItem))
 		{
-			m_nSelFirst = m_nAnchor;
-			m_nSelLast = m_nCaret;
-		}
-		else
-		{
-			m_nSelFirst = m_nCaret;
-			m_nSelLast = m_nAnchor;
+			if ((nFlags & MK_SHIFT) == 0)
+				SetAnchorIndex(nItem);
+			if (m_nAnchor < m_nCaret)
+			{
+				m_nSelFirst = m_nAnchor;
+				m_nSelLast = m_nCaret;
+			}
+			else
+			{
+				m_nSelFirst = m_nCaret;
+				m_nSelLast = m_nAnchor;
+			}
 		}
 		Invalidate();
 	}
+}
+
+void CDualListBox::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	BOOL bOutside;
+	UINT nItem = ItemFromPoint(point, bOutside);
+	if (!bOutside)
+		m_pView->OnListLButtonUp(nItem, nFlags, point);
+
+	CWnd::OnLButtonUp(nFlags, point);
+}
+
+void CDualListBox::OnMouseMove(UINT nFlags, CPoint point)
+{
+	BOOL bOutside;
+	UINT nItem = ItemFromPoint(point, bOutside);
+	if (!bOutside)
+		m_pView->OnListMouseMove(nItem, nFlags, point);
+
+	CWnd::OnMouseMove(nFlags, point);
 }
 
 void CDualListBox::UpdOffs()
@@ -218,6 +242,21 @@ void CDualListBox::UpdOffs()
 		m_nOffsLeft  = m_nOffsRight - m_nCharsLeft * m_nCharWidth;
 	}
 	SetScrollRange( SB_VERT, 0, m_nItems < m_nPageSize ? 0 : m_nItems - m_nPageSize );		// 20060315
+}
+
+void CDualListBox::InvalidateItem(int nItem)
+{
+	CRect rect;
+	int nR = GetItemRect(nItem, &rect);
+	if (nR != 0)
+		return;
+	InvalidateRect(&rect);
+}
+
+void CDualListBox::InvalidateSel()
+{
+	InvalidateItem(m_nSelFirst);
+	InvalidateItem(m_nSelLast);
 }
 
 void CDualListBox::OnSize(UINT nType, int cx, int cy)
@@ -465,6 +504,13 @@ int CDualListBox::SetSel( int nIndex, BOOL bSelect /* = TRUE */ )
 	return 0;
 }
 
+BOOL CDualListBox::IsSel(int nIndex)
+{
+	if (m_nSelFirst < 0)
+		return FALSE;
+	return (nIndex >= m_nSelFirst && nIndex <= m_nSelLast);
+}
+
 int CDualListBox::SetTopIndex( int nIndex, BOOL bInvalidate /* = TRUE */ )
 {
 	if ( nIndex < 0 )
@@ -505,9 +551,15 @@ int CDualListBox::SetCaretIndex( int nIndex, BOOL bScroll /* = TRUE */ )
 
 int CDualListBox::SelItemRange( BOOL bSelect, int nFirstItem, int nLastItem )
 {
-	if ( nFirstItem < 0 || nFirstItem >= m_nItems || nLastItem < 0 || nLastItem >= m_nItems || nLastItem < nFirstItem )
+	if ( nFirstItem < 0 || nFirstItem >= m_nItems || nLastItem < 0 || nLastItem >= m_nItems)
 		return LB_ERR;
 
+	if (nLastItem < nFirstItem)
+	{
+		int nItem = nLastItem;
+		nLastItem = nFirstItem;
+		nFirstItem = nItem;
+	}
 	if ( bSelect )
 	{
 		m_nSelFirst = nFirstItem;

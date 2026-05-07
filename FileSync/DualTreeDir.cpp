@@ -19,11 +19,15 @@ END_MESSAGE_MAP()
 //CDualTreeDir::CDualTreeDir(void)
 CDualTreeDir::CDualTreeDir(CDualTreeDirData &data) : CDualTreeDirBase(data), m_data(data)
 {
-	m_bDrag = FALSE;
-	m_bExpanding = FALSE;
-	m_bLocked = FALSE;
-	m_bBusyCursor = FALSE;
-	m_dwTicksOptimize = 0;
+	m_hCursorStd = AfxGetApp()->LoadStandardCursor(IDC_ARROW);
+	m_hCursorMoveR = AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32658));
+	m_hCursorMoveL = AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32657));
+	m_hCursorHand = AfxGetApp()->LoadStandardCursor(IDC_HAND);
+	m_hCursorNo = AfxGetApp()->LoadStandardCursor(IDC_NO);
+	m_hCursorDropL = AfxGetApp()->LoadCursor(IDC_REPLACE_LR);
+	m_hCursorDropR = AfxGetApp()->LoadCursor(IDC_REPLACE_RL);
+	m_hCursorWait = AfxGetApp()->LoadStandardCursor(IDC_WAIT);
+	m_hCursorAppStart = AfxGetApp()->LoadStandardCursor(IDC_APPSTARTING);
 }
 
 CDualTreeDir::~CDualTreeDir(void)
@@ -117,33 +121,44 @@ void CDualTreeDir::OnLButtonDown(UINT nFlags, CPoint point)
 	int nSide = -1;
 	HTREEITEM hItem = HitTestSide(point, &nSide);
 
-	if ((hItem == NULL))
-		return;
-	if (m_bEnableClick)
+	if (hItem != NULL && m_bEnableClick)
 	{
 		HTREEITEM hItemCaret = GetSelectedItem();
-		if (nSide == CDualTreeItem::common)
+		if (IsSel(hItem))
 		{
-			if ( (nFlags & MK_SHIFT) == MK_SHIFT && hItem != hItemCaret )
-			{
-				SelectRange(hItemCaret, hItem);
-				return;		// skipping update of caret
-			}
-			else if (!IsSel(hItem))
-			{
-				if ((nFlags & MK_CONTROL) == MK_CONTROL)
-				{
-					Sel(hItem);
-					Invalidate();
-				}
-				else
-					SelectSingle(hItem);
-			}
-			else if (nSide == CDualTreeItem::common && IsSel(hItem))
+			if ((nFlags & MK_CONTROL) == MK_CONTROL)
 			{
 				Sel(hItem, FALSE);
-				Invalidate();
+				CDualTreeCtrl::InvalidateItem(hItem);
 			}
+			else if (nSide == m_nSide)
+			{
+				if ((nFlags & MK_SHIFT) == MK_SHIFT)
+					::SetCursor(m_hCursorNo);	// start drag
+				else
+				{
+					m_bDragLocal = TRUE;
+					if (nSide == CDualTreeItem::left)
+						::SetCursor(m_hCursorMoveR);
+					else
+						::SetCursor(m_hCursorMoveL);
+				}
+			}
+		}
+		else
+		{
+			if ((nFlags & MK_CONTROL) == MK_CONTROL)
+			{
+				Sel(hItem);
+				CDualTreeCtrl::InvalidateItem(hItem);
+			}
+			else
+				SelectSingle(hItem);
+		}
+		if ((nFlags & MK_SHIFT) == MK_SHIFT && hItem != hItemCaret)
+		{
+			SelectRange(hItemCaret, hItem);
+			return;		// skipping update of caret
 		}
 	}
 	CDualTreeDirBase::OnLButtonDown(nFlags, point);
@@ -155,16 +170,17 @@ void CDualTreeDir::OnLButtonUp(UINT nFlags, CPoint point)
 
 	if ((hItem == NULL))
 		return;
-	if (m_bEnableClick)
+	if (m_bEnableClick && m_bDragLocal)
 	{
 		HTREEITEM hItemCaret = GetSelectedItem();
 		if (hItemCaret != NULL)
 		{
-		if ((point.x >= m_nOffsLeft && point.x < m_nOffsRight && m_nClickSide == CDualTreeItem::right) ||
+			if ((point.x >= m_nOffsLeft && point.x < m_nOffsRight && m_nClickSide == CDualTreeItem::right) ||
 				(point.x >= m_nOffsRight && m_nClickSide == CDualTreeItem::left))
 				::PostMessage(GetParent()->m_hWnd, WM_COMMAND, ID_EDIT_REPLACESEL | (BN_CLICKED << 16), NULL);
 		}
 	}
+	m_bDragLocal = FALSE;
 	CDualTreeDirBase::OnLButtonUp(nFlags, point);
 }
 
@@ -359,7 +375,9 @@ void CDualTreeDir::OnTvnBegindrag(NMHDR *pNMHDR, LRESULT *pResult)
 
 void CDualTreeDir::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if ( !m_bDrag )
+	if (m_bDrag)
+		TRACE0("OnMourseMove Drag\n");
+	else
 	{
 		if (nFlags == (MK_LBUTTON | MK_SHIFT) && m_nClickSide != CDualTreeItem::common)
 		{
@@ -368,29 +386,49 @@ void CDualTreeDir::OnMouseMove(UINT nFlags, CPoint point)
 			notify.ptDrag = point;
 			OnTvnBegindrag((NMHDR*)(&notify), &res);
 		}
-		else if (m_bEnableClick && (nFlags & MK_LBUTTON) != 0)
+		else if (m_bEnableClick)
 		{
 			int nSide = -1;
 			HTREEITEM hItem = HitTestSide(point, &nSide);
 			if (hItem != NULL)
 			{
-				if (nSide == CDualTreeItem::common && (nFlags & MK_CONTROL) == 0)
+				if (nSide == CDualTreeItem::common && !m_bDragLocal &&
+					(nFlags & MK_CONTROL) == 0 && (nFlags & MK_LBUTTON) != 0)
 				{
 					SelectRange(GetSelectedItem(), hItem);
 				}
-				else if (IsAnySel())
+				else if (IsSel(hItem))
 				{
-					if (nSide == m_nSide)
-						::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_SIZEALL));
-					else if (nSide == CDualTreeItem::right)
-						::SetCursor(AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32658)));	// ->
-					else if (nSide == CDualTreeItem::left)
-						::SetCursor(AfxGetApp()->LoadStandardCursor(MAKEINTRESOURCE(32657)));	// <-
+					CViewDirItem& d = GetItemData(hItem);
+					if (d.IsPresent(m_nSide))
+					{
+						if ((nFlags & MK_LBUTTON) == 0)
+						{
+							if (nSide == m_nSide)
+								::SetCursor(m_hCursorHand);
+						}
+						else
+						{
+							m_bDragLocal = TRUE;
+							if (nSide == (1 - m_nSide))
+							{
+								if (m_nSide == CDualTreeItem::left)
+									::SetCursor(m_hCursorDropL);
+								else
+									::SetCursor(m_hCursorDropR);
+							}
+							else if (nSide == CDualTreeItem::left)
+								::SetCursor(m_hCursorMoveR);
+							else if (nSide == CDualTreeItem::right)
+								::SetCursor(m_hCursorMoveL);
+							else
+								::SetCursor(m_hCursorNo);
+						}
+					}
 				}
 			}
 		}
 	}
-
 	CDualTreeDirBase::OnMouseMove(nFlags, point);
 }
 
@@ -417,7 +455,7 @@ BOOL CDualTreeDir::AllSelAreReady()
 	while ( hItem != NULL )
 	{
 		CViewDirItem &d = GetItemData( hItem );
-		if ( (m_nSide == 2 || d.IsPresent( m_nSide )) &&
+		if ( (m_nSide == CViewDirItem::common || d.IsPresent( m_nSide )) &&
 			(d.IsMarkPending() || d.IsDeleted() || d.IsMarkDirty()) )
 			return FALSE;
 		hItem = GetNextSel( hItem );
@@ -568,30 +606,10 @@ BOOL CDualTreeDir::Expand( TREEPOS pos )
 {
 	TRACE1("CDualTreeDir::Expand %s\n", m_data.GetItemNameDebug( pos ));
 	m_bExpanding = TRUE;
-//	HTREEITEM hFirst = GetFirstVisibleItem();
-//	ShowWindow( SW_HIDE );
 	BOOL bRet = CDualTreeDirBase::Expand( m_data.GetItemData( pos ).GetItemHandle(), TVE_EXPAND );
-//	EnsureVisible( hFirst );
-//	ShowWindow( SW_NORMAL );
 	m_bExpanding = FALSE;
 	return bRet;
 }
-
-//BOOL CDualTreeDir::Collapse( TREEPOS pos )
-//{
-//	return Collapse( m_data.GetItemData( pos ).GetItemHandle() );
-//}
-
-//BOOL CDualTreeDir::Free( TREEPOS pos )
-//{
-//	HTREEITEM hItem = m_data.GetItemData( pos ).GetItemHandle();
-//	if ( CDualTreeDirBase::Expand( hItem, TVE_COLLAPSE ) )
-//	{
-//		FreeItemRecursive( pos );
-//		return TRUE;
-//	}
-//	return FALSE;
-//}
 
 void CDualTreeDir::FreeItemRecursive( TREEPOS pos, BOOL bDel )
 {
@@ -656,18 +674,18 @@ void CDualTreeDir::SetBusyCursor( BOOL bBusy )
 	if ( bBusy != m_bBusyCursor ) {
 		m_bBusyCursor = bBusy;
 		if ( !bBusy )
-			::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_ARROW));
+			::SetCursor(m_hCursorStd);
 	}
 }
 
 BOOL CDualTreeDir::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 {
 	if ( m_bLocked ) {
-		::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_WAIT));
+		::SetCursor(m_hCursorWait);
 		return TRUE;
 	}
 	if ( m_bBusyCursor ) {
-		::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_APPSTARTING));
+		::SetCursor(m_hCursorAppStart);
 		return TRUE;
 	}
 	return CDualTreeDirBase::OnSetCursor(pWnd, nHitTest, message);

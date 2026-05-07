@@ -49,6 +49,7 @@ public:
 	void Link();
 	int GetSelFiles( int nSide );
 
+
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
@@ -60,11 +61,21 @@ protected:
 	HTREEITEM GetFirstSelInt(HTREEITEM hItem);
 	int GetFileCount( int nSide, HTREEITEM hItem );
 
-	BOOL m_bDrag;
-	BOOL m_bExpanding;
-	BOOL m_bLocked;
-	BOOL m_bBusyCursor;
-	DWORD m_dwTicksOptimize;
+	BOOL m_bDrag = FALSE;
+	BOOL m_bDragLocal = FALSE;
+	BOOL m_bExpanding = FALSE;
+	BOOL m_bLocked = FALSE;
+	BOOL m_bBusyCursor = FALSE;
+	DWORD m_dwTicksOptimize = 0;
+	HCURSOR m_hCursorStd = NULL;
+	HCURSOR m_hCursorMoveL = NULL;
+	HCURSOR m_hCursorMoveR = NULL;
+	HCURSOR m_hCursorHand = NULL;
+	HCURSOR m_hCursorWait = NULL;
+	HCURSOR m_hCursorAppStart = NULL;
+	HCURSOR m_hCursorNo = NULL;
+	HCURSOR m_hCursorDropL = NULL;
+	HCURSOR m_hCursorDropR = NULL;
 
 private:
 	CDualTreeDirData &m_data;

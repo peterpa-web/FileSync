@@ -55,6 +55,10 @@ BEGIN_MESSAGE_MAP(CViewDir, CViewFileSync)
 	ON_WM_SIZE()
 	ON_UPDATE_COMMAND_UI(ID_EDIT_COPY, OnUpdateEditCopy)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_COPYDETAILS, OnUpdateEditCopy)
+	ON_COMMAND(ID_EDIT_COPYDETAILS, OnEditCopyDetails)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_COPYPATH, OnUpdateEditCopy)
+	ON_COMMAND(ID_EDIT_COPYPATH, OnEditCopyPath)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_REPLACESEL, OnUpdateEditReplacesel)
 	ON_COMMAND(ID_EDIT_REPLACESEL, OnEditReplacesel)
 	ON_UPDATE_COMMAND_UI(ID_EDIT_DEL_LINES, OnUpdateEditDelete)
@@ -1035,11 +1039,11 @@ HGLOBAL CViewDir::SelCopy()
 			strFullPath = dp.GetName() + _T("\\") + strFullPath;
 			hParentItem = m_tree.GetParentItem( hParentItem );
 		}
-		nChar += strFullPath.GetLength() + 2;
 		strText += strFullPath + _T("\r\n");
 		hItem = m_tree.GetNextSel( hItem );
 	}
 
+	nChar = strText.GetLength();
 	if ( nChar < 1 )
 		return NULL;	// nothing to copy
 
@@ -1047,10 +1051,107 @@ HGLOBAL CViewDir::SelCopy()
 	if (hg == NULL) 
 		return NULL; 
 
-	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hg); 
-	int nLen = strText.GetLength();
-	memcpy(lptstrCopy, (LPCTSTR)strText, nLen * sizeof(TCHAR));
-	lptstrCopy += nLen;
+	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hg);
+	if (lptstrCopy == nullptr)
+		return NULL;
+
+	memcpy(lptstrCopy, (LPCTSTR)strText, nChar * sizeof(TCHAR));
+	lptstrCopy += nChar;
+	*lptstrCopy = (TCHAR) 0;    // null character 
+	GlobalUnlock(hg); 
+
+	return hg;
+}
+
+HGLOBAL CViewDir::SelCopyDetails()
+{
+	int nSide = s_nSide;
+	CString strText;
+
+	// compute size
+	int nChar = 0;
+	HTREEITEM hItem = m_tree.GetFirstSel();
+	while ( hItem != NULL )
+	{
+		const CViewDirItem &d = m_tree.GetItemData(hItem);
+		if (d.IsPresent(nSide))
+		{
+			CString strFullPath = d.GetName();
+			HTREEITEM hParentItem = m_tree.GetParentItem(hItem);
+			while (hParentItem != NULL)
+			{
+				const CViewDirItem& dp = m_tree.GetItemData(hParentItem);
+				strFullPath = dp.GetName() + _T("\\") + strFullPath;
+				hParentItem = m_tree.GetParentItem(hParentItem);
+			}
+			CString strDetails;
+			strDetails = ';' + d.GetDateTimeStr(nSide) + ';' + d.GetFileSizeStr(nSide);
+			strFullPath += strDetails;
+			strText += strFullPath + _T("\r\n");
+		}
+		hItem = m_tree.GetNextSel( hItem );
+	}
+	nChar = strText.GetLength();
+	if (nChar < 1)
+		return NULL;	// nothing to copy
+
+	HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, (nChar + 1) * sizeof(TCHAR));
+	if (hg == NULL)
+		return NULL;
+
+	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hg);
+	if (lptstrCopy == nullptr)
+		return NULL;
+
+	memcpy(lptstrCopy, (LPCTSTR)strText, nChar * sizeof(TCHAR));
+	lptstrCopy += nChar;
+	*lptstrCopy = (TCHAR) 0;    // null character 
+	GlobalUnlock(hg); 
+
+	return hg;
+}
+
+HGLOBAL CViewDir::SelCopyPath()
+{
+	int nSide = s_nSide;
+	CString strBasePath = GetDoc(nSide)->GetPathName();
+	CString strText;
+
+	// compute size
+	int nChar = 0;
+	HTREEITEM hItem = m_tree.GetFirstSel();
+	while (hItem != NULL)
+	{
+		const CViewDirItem& d = m_tree.GetItemData(hItem);
+		if (d.IsPresent(nSide))
+		{
+			CString strFullPath = d.GetName();
+			HTREEITEM hParentItem = m_tree.GetParentItem(hItem);
+			while (hParentItem != NULL)
+			{
+				const CViewDirItem& dp = m_tree.GetItemData(hParentItem);
+				strFullPath = dp.GetName() + _T("\\") + strFullPath;
+				hParentItem = m_tree.GetParentItem(hParentItem);
+			}
+			strFullPath = strBasePath + '\\' + strFullPath;
+			strText += strFullPath + _T("\r\n");
+		}
+		hItem = m_tree.GetNextSel(hItem);
+	}
+	nChar = strText.GetLength();
+	if (nChar < 1)
+		return NULL;	// nothing to copy
+
+	HGLOBAL hg = GlobalAlloc(GMEM_MOVEABLE, (nChar + 1) * sizeof(TCHAR));
+	if (hg == NULL)
+		return NULL;
+
+	LPTSTR lptstrCopy = (LPTSTR)GlobalLock(hg);
+	if (lptstrCopy == nullptr)
+		return NULL;
+
+	memcpy(lptstrCopy, (LPCTSTR)strText, nChar * sizeof(TCHAR));
+	lptstrCopy += nChar;
 	*lptstrCopy = (TCHAR) 0;    // null character 
 	GlobalUnlock(hg); 
 
@@ -1070,15 +1171,33 @@ void CViewDir::OnEditCopy()
 		return;
 	HGLOBAL hg = SelCopy();
 	if ( hg != NULL )
-#ifdef _UNICODE
 		SetClipboardData(CF_UNICODETEXT, hg);
-#else
-		SetClipboardData(CF_TEXT, hg);
-#endif
 	CloseClipboard();
 }
 
+void CViewDir::OnEditCopyDetails()
+{
+	if (!OpenClipboard())
+		return;
+	if (!EmptyClipboard())
+		return;
+	HGLOBAL hg = SelCopyDetails();
+	if (hg != NULL)
+		SetClipboardData(CF_UNICODETEXT, hg);
+	CloseClipboard();
+}
 
+void CViewDir::OnEditCopyPath()
+{
+	if (!OpenClipboard())
+		return;
+	if (!EmptyClipboard())
+		return;
+	HGLOBAL hg = SelCopyPath();
+	if (hg != NULL)
+		SetClipboardData(CF_UNICODETEXT, hg);
+	CloseClipboard();
+}
 
 void CViewDir::OnUpdateEditDelete(CCmdUI *pCmdUI)
 {

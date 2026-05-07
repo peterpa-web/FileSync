@@ -24,7 +24,9 @@ protected:
 public:
 	virtual void DrawLBItem(CDC* pDC, LPDRAWITEMSTRUCT lpDrawItemStruct);
 	virtual void OnListDblClk(UINT nItem, int nSide, const CRect &rect, CPoint point);
-	virtual void OnListLButtonDown();
+	virtual void OnListLButtonDown(UINT nItem, UINT nFlags, CPoint point);
+	virtual void OnListLButtonUp(UINT nItem, UINT nFlags, CPoint point);
+	virtual void OnListMouseMove(UINT nItem, UINT nFlags, CPoint point);
 	virtual void OnListVScroll();
 
 protected:

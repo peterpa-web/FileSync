@@ -78,9 +78,19 @@ void CViewList::OnListDblClk(UINT nItem, int nSide, const CRect &rect, CPoint po
 	// dummy
 }
 
-void CViewList::OnListLButtonDown()
+void CViewList::OnListLButtonDown(UINT nItem,  UINT nFlags, CPoint point)
 {
 	SetFocus();
+}
+
+void CViewList::OnListLButtonUp(UINT nItem, UINT nFlags, CPoint point)
+{
+	// dummy
+}
+
+void CViewList::OnListMouseMove(UINT nItem, UINT nFlags, CPoint point)
+{
+	// dummy
 }
 
 void CViewList::OnListVScroll()

@@ -29,8 +29,20 @@ protected:
 	} ItemData;
 	typedef CArray<ItemData,ItemData> CItemDataArray;
 	CItemDataArray m_aItemData;
-	int m_nCharOffs;
-	CEditLine *m_pEdit;
+	int m_nCharOffs = 0;
+	CEditLine *m_pEdit = nullptr;
+	BOOL m_bDragLocal = FALSE;
+	HCURSOR m_hCursorStd = NULL;
+	HCURSOR m_hCursorMoveL = NULL;
+	HCURSOR m_hCursorMoveR = NULL;
+	HCURSOR m_hCursorHand = NULL;
+	HCURSOR m_hCursorNo = NULL;
+	HCURSOR m_hCursorReplaceLR = NULL;
+	HCURSOR m_hCursorReplaceRL = NULL;
+	HCURSOR m_hCursorInsertLA = NULL;
+	HCURSOR m_hCursorInsertLB = NULL;
+	HCURSOR m_hCursorInsertRA = NULL;
+	HCURSOR m_hCursorInsertRB = NULL;
 
 	CDocText* GetDoc(int nSide) const { return (CDocText *)m_pDoc[nSide]; }
 	CDocText* GetCurrDoc() const { return GetDoc(s_nSide); }
@@ -42,6 +54,7 @@ protected:
 	void AddItems( CItemDataArray *paItems );
 	void DeleteItems( int nItem, int nCount = 1 );
 	void DrawLBItemSide(CDC* pDC, LPDRAWITEMSTRUCT lpDrawItemStruct, int nSide);
+	void EndEdit();
 
 	virtual void DeleteContents();
 	void DeleteContents2();
@@ -78,7 +91,9 @@ protected:
 
 public:
 	virtual void DrawLBItem(CDC* pDC, LPDRAWITEMSTRUCT lpDrawItemStruct);
-	virtual void OnListLButtonDown();
+	virtual void OnListLButtonDown(UINT nItem, UINT nFlags, CPoint point) override;
+	virtual void OnListLButtonUp(UINT nItem, UINT nFlags, CPoint point) override;
+	virtual void OnListMouseMove(UINT nItem, UINT nFlags, CPoint point) override;
 	virtual void OnListDblClk(UINT nItem, int nSide, const CRect &rect, CPoint point);
 	virtual void OnListVScroll();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
