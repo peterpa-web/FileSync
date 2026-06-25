@@ -13,14 +13,6 @@
 IMPLEMENT_DYNAMIC(CPrefDlg, CDialog)
 CPrefDlg::CPrefDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CPrefDlg::IDD, pParent)
-	, m_nTabSize(0)
-	, m_bIgnSpaces(FALSE)
-	, m_bUnixLeft(FALSE)
-	, m_bUnixRight(FALSE)
-	, m_bReadOnlyLeft(FALSE)
-	, m_bReadOnlyRight(FALSE)
-	, m_strEncodingL(_T(""))
-	, m_strEncodingR(_T(""))
 {
 }
 
@@ -34,6 +26,8 @@ void CPrefDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_TABSIZE, m_nTabSize);
 	DDV_MinMaxInt(pDX, m_nTabSize, 1, 10);
 	DDX_Check(pDX, IDC_CHECK_IGN_SPACES, m_bIgnSpaces);
+	DDX_Check(pDX, IDC_CHECK_BOM_LEFT, m_bBomLeft);
+	DDX_Check(pDX, IDC_CHECK_BOM_RIGHT, m_bBomRight);
 	DDX_Check(pDX, IDC_CHECK_UNIX_LEFT, m_bUnixLeft);
 	DDX_Check(pDX, IDC_CHECK_UNIX_RIGHT, m_bUnixRight);
 	DDX_Check(pDX, IDC_CHECK_RO_LEFT, m_bReadOnlyLeft);

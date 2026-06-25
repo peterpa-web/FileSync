@@ -160,6 +160,8 @@ void CDocFileSync::SetReadOnly( BOOL b )
 
 void CDocFileSync::SetReadOnlyFile( BOOL b )
 {
+	if (m_strPathName.IsEmpty())
+		return;
 	if ( m_pParent != NULL && m_posParent != NULL )
 		m_pParent->MakeRW( m_posParent, !b );
 	else {

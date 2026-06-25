@@ -217,18 +217,13 @@ void CDocText::LineData::GetCombinedWords( CStringList &lstr, DWORD dwMode /* = 
 IMPLEMENT_DYNCREATE(CDocText, CDocFile)
 
 LPCTSTR CDocText::s_pszEncodingDefault		= _T("default");
-LPCTSTR CDocText::s_pszEncodingUnicode		= _T("Unicode");
-LPCTSTR CDocText::s_pszEncodingUnicodeRev	= _T("Unicode Rev");
+LPCTSTR CDocText::s_pszEncodingUnicode		= _T("UTF-16");
+LPCTSTR CDocText::s_pszEncodingUnicodeRev	= _T("UTF-16 Rev");
 LPCTSTR CDocText::s_pszEncodingUTF8			= _T("UTF-8");
 LPCTSTR CDocText::s_pszEncodingXUTF8		= _T("XML UTF-8");
 
 CDocText::CDocText(void) : m_listLines(500), m_mapHashToLines(500)
 {
-	m_nMaxLineLen = 0;
-	m_nTabExpand = 4;
-	m_bCompactSpace = FALSE;
-	m_bUnixFormat = FALSE;
-	m_strEncoding = s_pszEncodingDefault;
 }
 
 CDocText::~CDocText(void)
@@ -254,6 +249,7 @@ void CDocText::DeleteContents()
 	m_nMaxLineLen = 0;
 	m_nTabExpand = 4;		// 20100428
 	m_bCompactSpace = FALSE;
+	m_bBom = FALSE;
 	m_bUnixFormat = FALSE;
 	m_strEncoding = s_pszEncodingDefault;
 }
@@ -322,6 +318,7 @@ void CDocText::RestoreFile( CFile *pFile )
 
 //	SetModifiedFlag( FALSE );
 	m_listLines.RemoveAll();
+	m_bBom = FALSE;
 	m_bUnixFormat = FALSE;
 	m_strEncoding = s_pszEncodingDefault;
 
@@ -371,14 +368,14 @@ void CDocText::RestoreFile( CFile *pFile )
 		if ( szBuf[0] == (char)0xef && szBuf[1] == (char)0xbb && szBuf[2] == (char)0xbf )
 		{
 			m_strEncoding = s_pszEncodingUTF8;
+			m_bBom = TRUE;
 		}
 		// use IsTextUnicode()
 		// for Unicode: ff fe
 		else if ( szBuf[0] == (char)0xff && szBuf[1] == (char)0xfe )
 		{
 			m_strEncoding = s_pszEncodingUnicode;
-//			AfxMessageBox( m_strPathName + _T("\nUnicode is not supported now."), MB_ICONWARNING );
-//			return;
+			m_bBom = TRUE;
 		}
 		// for Unicode big endian: fe ff
 		else if ( szBuf[0] == (char)0xfe && szBuf[1] == (char)0xff )
@@ -639,7 +636,7 @@ void CDocText::StoreFile( CFile *pFile )
 	}
 	else if ( m_strEncoding == s_pszEncodingUTF8 || m_strEncoding == s_pszEncodingXUTF8 )
 	{
-		if ( m_strEncoding == s_pszEncodingUTF8 )
+		if ( m_bBom && m_strEncoding == s_pszEncodingUTF8 )
 			pFile->Write( "\xef\xbb\xbf", 3 );
 		else {
 			LineData &ld = GetLineDataAt( pos );
@@ -690,8 +687,8 @@ void CDocText::StoreFile( CFile *pFile )
 	}
 	else if ( m_strEncoding == s_pszEncodingUnicode )
 	{
-//		AfxMessageBox( m_strPathName + _T("\nUnicode is not supported now."), MB_ICONWARNING );
-		pFile->Write( "\xff\xfe", 2 );
+		if (m_bBom)
+			pFile->Write( "\xff\xfe", 2 );
 
 		char* pBuf = new char[2*m_nMaxLineLen];
 		int nLine;

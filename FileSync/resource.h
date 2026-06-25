@@ -79,11 +79,14 @@
 #define IDC_CHECK_UNIX_RIGHT            1016
 #define IDC_SPIN_TABSIZE                1017
 #define IDC_SPIN_SYNCLINES              1018
+#define IDC_CHECK_BOM_LEFT              1018
 #define IDC_CHECK_RO_LEFT               1019
 #define IDC_CHECK_RO_RIGHT              1020
 #define IDC_CHECK_FRO_LEFT              1021
 #define IDC_CHECK_FRO_RIGHT             1022
 #define IDC_LIST_EXT                    1023
+#define IDC_CHECK_UNIX_RIGHT2           1023
+#define IDC_CHECK_BOM_RIGHT             1023
 #define IDC_EDIT_EXT                    1024
 #define IDC_BUTTON_DEL                  1025
 #define IDC_BUTTON_ADD                  1026
@@ -156,9 +159,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        206
+#define _APS_NEXT_RESOURCE_VALUE        207
 #define _APS_NEXT_COMMAND_VALUE         32822
-#define _APS_NEXT_CONTROL_VALUE         1043
+#define _APS_NEXT_CONTROL_VALUE         1044
 #define _APS_NEXT_SYMED_VALUE           106
 #endif
 #endif

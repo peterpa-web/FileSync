@@ -61,8 +61,8 @@ public:
 		void Remove (POSLINE pos );
 
 	protected:
-		POSLINE m_posLineData;
-		CPosList *m_pPosList;
+		POSLINE m_posLineData = NULL;
+		CPosList *m_pPosList = nullptr;
 	};
 
 	virtual void DeleteContents();
@@ -79,7 +79,9 @@ public:
 	int GetTabSize() const { return m_nTabExpand; }
 	void SetTabSize( int n ) { m_nTabExpand = n; }		// need UpdateInternalLines
 	BOOL IsCompactSpace() const { return m_bCompactSpace; }
-	void SetCompactSpace( BOOL b ) { m_bCompactSpace = b; }		// need UpdateInternalLines
+	void SetCompactSpace( BOOL b ) { m_bCompactSpace = b; }		// need UpdateInternalLines() con
+	BOOL HasBOM() const { return m_bBom; }
+	void SetBOM(BOOL b) { m_bBom = b; }
 	BOOL IsUnixFormat() const { return m_bUnixFormat; }
 	void SetUnixFormat( BOOL b ) { m_bUnixFormat = b; }
 	CString GetEncoding() const { return m_strEncoding; }
@@ -126,11 +128,12 @@ public:
 protected:
 	CList<LineData,LineData&> m_listLines;
 	CMap<DWORD,DWORD,CMapElem,CMapElem> m_mapHashToLines;
-	int m_nMaxLineLen;
-	int m_nTabExpand;
-	BOOL m_bCompactSpace;
-	BOOL m_bUnixFormat;
-	CString m_strEncoding;
+	int m_nMaxLineLen = 0;
+	int m_nTabExpand = 4;
+	BOOL m_bCompactSpace = FALSE;
+	BOOL m_bBom = FALSE;
+	BOOL m_bUnixFormat = FALSE;
+	CString m_strEncoding = s_pszEncodingDefault;
 	CString m_strEmpty;
 
 	void StoreFile( CFile *pFile );

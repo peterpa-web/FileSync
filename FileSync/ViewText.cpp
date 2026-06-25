@@ -1390,6 +1390,8 @@ void CViewText::OnEditPref()
 	CPrefDlg dlg;
 	dlg.m_nTabSize = GetCurrDoc()->GetTabSize();
 	dlg.m_bIgnSpaces = GetCurrDoc()->IsCompactSpace();
+	dlg.m_bBomLeft = GetDoc(0)->HasBOM();
+	dlg.m_bBomRight = GetDoc(1)->HasBOM();
 	dlg.m_bUnixLeft = GetDoc(0)->IsUnixFormat();
 	dlg.m_bUnixRight = GetDoc(1)->IsUnixFormat();
 	dlg.m_bReadOnlyLeft = GetDoc(0)->IsReadOnly();
@@ -1402,12 +1404,22 @@ void CViewText::OnEditPref()
 	BOOL bIgnSpaces = dlg.m_bIgnSpaces;
 
 	INT_PTR nRc = dlg.DoModal();
-	if ( nRc == IDOK )
+	if (nRc == IDOK)
 	{
-		GetDoc(0)->SetTabSize( dlg.m_nTabSize );
-		GetDoc(1)->SetTabSize( dlg.m_nTabSize );
-		GetDoc(0)->SetCompactSpace( dlg.m_bIgnSpaces );
-		GetDoc(1)->SetCompactSpace( dlg.m_bIgnSpaces );
+		GetDoc(0)->SetTabSize(dlg.m_nTabSize);
+		GetDoc(1)->SetTabSize(dlg.m_nTabSize);
+		GetDoc(0)->SetCompactSpace(dlg.m_bIgnSpaces);
+		GetDoc(1)->SetCompactSpace(dlg.m_bIgnSpaces);
+		if (GetDoc(0)->HasBOM() != dlg.m_bBomLeft)
+		{
+			GetDoc(0)->SetBOM( dlg.m_bBomLeft );
+			GetDoc(0)->SetModifiedFlag();
+		}
+		if ( GetDoc(1)->HasBOM() != dlg.m_bBomRight )
+		{
+			GetDoc(1)->SetBOM( dlg.m_bBomRight );
+			GetDoc(1)->SetModifiedFlag();
+		}
 		if ( GetDoc(0)->IsUnixFormat() != dlg.m_bUnixLeft )
 		{
 			GetDoc(0)->SetUnixFormat( dlg.m_bUnixLeft );
@@ -1561,7 +1573,7 @@ void CViewText::OnListMouseMove(UINT nItem, UINT nFlags, CPoint point)
 		}
 		else
 		{
-			if (nSide == (1 - s_nSide))
+			if (nSide == (1 - s_nSide) && (nFlags & MK_LBUTTON) != 0)
 			{
 				if (nSide == right)
 				{
